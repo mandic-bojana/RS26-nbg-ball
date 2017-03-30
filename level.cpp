@@ -23,6 +23,7 @@ Level::Level(QWidget *parent) {
 
     _ball=new Ball(this);
     _scene->addItem(_ball);
+    setMouseTracking(true);
 }
 
 Level::~Level() {
@@ -36,3 +37,5 @@ Plate *Level::plate()
     return _plate;
 }
 
+const char* Level::plate_pic_address = ":/images/plate.png";
+const char* Level::ball_pic_address = ":/images/plate.png";

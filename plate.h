@@ -7,6 +7,7 @@
 #include <QGraphicsEllipseItem>
 #include <QObject>
 #include <QKeyEvent>
+#include <QMouseEvent>
 
 class Plate: public QObject, public QGraphicsPixmapItem
 {
@@ -17,19 +18,25 @@ public:
     double y();
     double r();
     double excess();
-    void resize_height(double x);
-    void resize_width(double x);
+    void resize_height(double d);
+    void resize_width(double d);
+    void move(double d);
+    QPointF left();
+    QPointF right();
+    QPointF top();
+    QPointF center();
 
 public slots:
     void keyPressEvent(QKeyEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 
 private:
     double _excess;
     double _r;
-    const static double max_excess = 100;
-    const static double max_length = 400;
-    const static double min_excess = 20;
-    const static double min_length = 50;
+    static const double max_excess;
+    static const double max_length;
+    static const double min_excess;
+    static const double min_length;
 };
 
 #endif // PLATE_H
