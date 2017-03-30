@@ -4,7 +4,7 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QWidget>
-#include <String>
+#include <string>
 #include "plate.h"
 #include "ball.h"
 
@@ -14,6 +14,11 @@ public:
     Level(QWidget *parent = 0);
     ~Level();
     Plate* plate();
+
+
+ public slots:
+    void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent* event);
 
     static const char* plate_pic_address;
     static const char* ball_pic_address;

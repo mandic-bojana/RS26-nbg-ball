@@ -21,11 +21,6 @@ void Plate::keyPressEvent(QKeyEvent *event)
         move(-10);
 }
 
-void Plate::mouseMoveEvent(QMouseEvent *event)
-{
-    qDebug() << event->x();
-    move(event->x() - x());
-}
 
 void Plate::resize_width(double d) {
     QPointF A = right();
@@ -42,7 +37,7 @@ void Plate::resize_width(double d) {
     if(len <= max_length && len >= min_length) {
         setX(x() - R);
         _r = R;
-        setPixmap(QPixmap(level->plate_pic_address).scaled(2*R, 2*R));
+        setPixmap(QPixmap(":/images/plate.png").scaled(2*R, 2*R));
     }
 }
 
