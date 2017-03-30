@@ -5,13 +5,13 @@
 
 extern Level *level;
 
-Ball::Ball(QGraphicsView *view, QGraphicsItem *parent) {
-    //setParent(parent);
-    setPixmap(QPixmap(":/images/plate.png").scaled(30, 30));
+Ball::Ball(QGraphicsView *view, QGraphicsItem *parent)
+    : QObject(), QGraphicsPixmapItem(parent) {
+    setPixmap(QPixmap(level->ball_pic_address).scaled(30, 30));
     setPos(-15 + view->width()/2, view->height() - /*excess*/40 - 30);
     _r = 15;
     angle = 1.5;
-    speed = 1;
+    speed = 3;
 
     interval = 10;
     _timer = new QTimer();
@@ -39,10 +39,13 @@ void Ball::move() {
 
     if(collidesWithItem(level->plate())) {
         double k = (x() - level->plate()->x()) / (y() - level->plate()->y());
-        bounce(atan(k));
+        double fi = atan(k);
+        qDebug() << fi;
+        if(angle - fi < 0 || (angle - fi > M_PI && angle - fi < 2*M_PI))
+            bounce(fi);
     }
 
-    if(_timer->interval()>=1) {
+    if(_timer->interval()>=3) {
         interval -= 0.001;
         _timer->setInterval(interval);
     }

@@ -1,34 +1,44 @@
 #include "plate.h"
+#include "level.h"
 #include <QDebug>
 #include <math.h>
+
+extern Level *level;
 
 Plate::Plate(QGraphicsView* view, QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
     _excess = 40;
     _r = 150;
-    setPixmap(QPixmap(":/images/plate.png").scaled(300, 300));
+    setPixmap(QPixmap(level->plate_pic_address).scaled(300, 300));
     setPos(view->width()/2 - r(), view->height() - _excess);
 }
 
 void Plate::keyPressEvent(QKeyEvent *event)
 {
     if(event->key()==Qt::Key_Right)
-        setX(pos().x() + 10);
+        move(10);
     else if(event->key()==Qt::Key_Left)
-        setX(pos().x() - 10);
+        move(-10);
 }
 
-void Plate::resize_width(double dx) {
-    QPointF A(pos().x() + r() + sqrt(r()*r() - (r()-_excess)*(r()-_excess)), pos().y() + _excess);
-    QPointF AP = A + QPointF(dx, 0);
-    QPointF T(pos().x() + r(), pos().y());
+void Plate::mouseMoveEvent(QMouseEvent *event)
+{
+    qDebug() << event->x();
+    move(event->x() - x());
+}
+
+void Plate::resize_width(double d) {
+    QPointF A = right();
+    QPointF AP = A + QPointF(d, 0);
+    QPointF T = top();
     QPointF S = (AP + T)/2;
-    QPointF v = T - AP;
-    QPointF vn(-v.y(), v.x());
-    double t = (T.x() - S.x()) / vn.x();
-    double y = S.y() + t * vn.y();
-    double R = y - T.y();
-    double len = 2*(AP.x()-T.x());
+    QPointF v = T - AP;                             //vektor
+    QPointF vn(-v.y(), v.x());                      //vektor normale
+    double t = (T.x() - S.x()) / vn.x();            //koeficijent
+    double y = S.y() + t * vn.y();                  //y koordinata novog centra
+    double R = y - T.y();                           //novi poluprecnik
+    double len = 2*(AP.x()-T.x());                  //nova duzina podloge
+
     if(len <= max_length && len >= min_length) {
         setX(x() - R);
         _r = R;
@@ -36,25 +46,47 @@ void Plate::resize_width(double dx) {
     }
 }
 
-void Plate::resize_height(double dx) {
-    if(_excess + dx <= max_excess && _excess + dx >= min_excess) {
-        QPointF A(pos().x() + r() + sqrt(r()*r() - (r()-_excess)*(r()-_excess)), pos().y() + _excess);
-        QPointF T(pos().x() + r(), pos().y());
-        QPointF TP = T - QPointF(0, dx);
+void Plate::resize_height(double d) {
+    if(_excess + d <= max_excess && _excess + d >= min_excess) {
+        QPointF A = right();
+        QPointF T = top();
+        QPointF TP = T - QPointF(0, d);
         QPointF S = (A + TP) / 2;
-        QPointF v = TP - A;
-        QPointF vn(-v.y(), v.x());
-        double t = (T.x() - S.x()) / vn.x();
-        double y = S.y() + t * vn.y();
-        double R = y - TP.y();
+        QPointF v = TP - A;                         //vektor
+        QPointF vn(-v.y(), v.x());                  //vektor normale
+        double t = (T.x() - S.x()) / vn.x();        //koeficijent
+        double y = S.y() + t * vn.y();              //y koordinata novog centra
+        double R = y - TP.y();                      //novi poluprecnik
 
-        _excess += dx;
+        _excess += d;
         setY(TP.y());
         setX(x() - R);
         _r = R;
-        setPixmap(QPixmap(":/images/plate.png").scaled(2*R, 2*R));
+        setPixmap(QPixmap(level->plate_pic_address).scaled(2*R, 2*R));
     }
 }
+
+void Plate::move(double d) {
+    if(left().x() + d >= 0 && right().x() + d <= scene()->width())
+        setX(pos().x() + d);
+}
+
+QPointF Plate::left() {
+    return QPointF(pos().x() + r() - sqrt(r()*r() - (r()-_excess)*(r()-_excess)), pos().y() + _excess);
+}
+
+QPointF Plate::right() {
+    return QPointF(pos().x() + r() + sqrt(r()*r() - (r()-_excess)*(r()-_excess)), pos().y() + _excess);
+}
+
+QPointF Plate::top() {
+    return QPointF(pos().x() + r(), pos().y());
+}
+
+QPointF Plate::center() {
+    return QPointF(pos().x() + r(), pos().y() + r());
+}
+
 
 double Plate::x() {
     return pos().x() + r();
@@ -72,3 +104,8 @@ double Plate::excess()
 {
     return _excess;
 }
+
+const double Plate::max_excess = 100;
+const double Plate::max_length = 400;
+const double Plate::min_excess = 20;
+const double Plate::min_length = 50;
