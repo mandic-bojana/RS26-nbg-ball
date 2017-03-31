@@ -5,7 +5,7 @@
 
 extern Level *level;
 
-Plate::Plate(QGraphicsView* view, QGraphicsItem *parent)
+Plate::Plate(QGraphicsView *view, QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
     _excess = 40;
     _r = 150;

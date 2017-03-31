@@ -17,6 +17,8 @@ public:
     ~Ball();
 
     void bounce(double alpha);
+    void bounce_point(QPointF point);
+    void bounce_point(double px, double py);
     void bounce_vertical();
     void bounce_horizontal();
 
