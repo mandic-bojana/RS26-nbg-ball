@@ -2,6 +2,7 @@
 #include <QBrush>
 #include <QImage>
 #include <QDebug>
+#include "bullet.h"
 
 using namespace std;
 
@@ -52,6 +53,19 @@ vector<Brick *> *Level::bricks() {
 
 Plate *Level::plate() {
     return _plate;
+}
+
+void Level::mouseMoveEvent(QMouseEvent *event)
+{
+//    qDebug()<<event->x();
+    _plate->move(event->x() - _plate->x());
+}
+
+void Level::mousePressEvent(QMouseEvent *event)
+{
+    Bullet* bullet=new Bullet();
+    bullet->setPos(_plate->x(), _plate->y() - _plate->r());
+    _scene->addItem(bullet);
 }
 
 const char* Level::plate_pic_address = ":/images/plate.png";

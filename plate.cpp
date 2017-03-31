@@ -21,11 +21,6 @@ void Plate::keyPressEvent(QKeyEvent *event)
         move(-10);
 }
 
-void Plate::mouseMoveEvent(QMouseEvent *event)
-{
-    qDebug() << event->x();
-    move(event->x() - x());
-}
 
 void Plate::resize_width(double d) {
     QPointF A = right();

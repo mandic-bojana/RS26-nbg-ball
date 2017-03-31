@@ -28,7 +28,7 @@ public:
 
 public slots:
     void keyPressEvent(QKeyEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
+
 
 private:
     double _excess;
