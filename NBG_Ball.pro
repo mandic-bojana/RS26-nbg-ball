@@ -15,12 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp \
     level.cpp \
     plate.cpp \
-    ball.cpp
+    ball.cpp \
+    brick.cpp
 
 HEADERS  += \
     level.h \
     plate.h \
-    ball.h
+    ball.h \
+    brick.h
 
 FORMS    +=
 
