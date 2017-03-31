@@ -3,10 +3,12 @@
 #include <QImage>
 #include <QDebug>
 
+using namespace std;
+
 Level::Level(QWidget *parent) {
     setParent(parent);
 
-    _scene = new QGraphicsScene;
+    _scene = new QGraphicsScene();
     setScene(_scene);
 
     _scene->setSceneRect(0, 0, 800, 600);
@@ -21,9 +23,22 @@ Level::Level(QWidget *parent) {
     _plate->setFocus();
     _scene->addItem(_plate);
 
-    _ball=new Ball(this);
+    bricks_row = 15;
+    bricks_column = 20;
+    bricks_space = 5;
+
+    double brick_width = (width() - bricks_space)/bricks_row - bricks_space;
+    double brick_height = (height() - bricks_space)/bricks_column - bricks_space;
+
+    for(int i = 0; i < bricks_row; i++)
+        for(int j = 0; j < 3; j++) {
+            Brick* brick = new Brick(brick_width, brick_height, bricks_space + i * (brick_width + bricks_space), bricks_space + j * (brick_height + bricks_space));
+            _bricks.push_back(brick);
+            _scene->addItem(brick);
+        }
+
+    _ball = new Ball(this);
     _scene->addItem(_ball);
-    setMouseTracking(true);
 }
 
 Level::~Level() {
@@ -31,11 +46,14 @@ Level::~Level() {
     delete _plate;
 }
 
+vector<Brick *> *Level::bricks() {
+    return &_bricks;
+}
 
-Plate *Level::plate()
-{
+Plate *Level::plate() {
     return _plate;
 }
 
 const char* Level::plate_pic_address = ":/images/plate.png";
 const char* Level::ball_pic_address = ":/images/plate.png";
+const char* Level::brick_pic_address = ":/images/brick.png";

@@ -5,7 +5,7 @@
 
 extern Level *level;
 
-Plate::Plate(QGraphicsView* view, QGraphicsItem *parent)
+Plate::Plate(QGraphicsView *view, QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
     _excess = 40;
     _r = 150;
@@ -42,7 +42,7 @@ void Plate::resize_width(double d) {
     if(len <= max_length && len >= min_length) {
         setX(x() - R);
         _r = R;
-        setPixmap(QPixmap(":/images/plate.png").scaled(2*R, 2*R));
+        setPixmap(QPixmap(level->plate_pic_address).scaled(2*R, 2*R));
     }
 }
 
