@@ -28,6 +28,7 @@ public:
     static const char* plate_pic_address;
     static const char* ball_pic_address;
     static const char* brick_pic_address;
+    static const char* bullet_pic_address;
 
 private:
     QGraphicsScene *_scene;

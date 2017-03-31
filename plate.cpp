@@ -21,7 +21,6 @@ void Plate::keyPressEvent(QKeyEvent *event)
         move(-10);
 }
 
-
 void Plate::resize_width(double d) {
     QPointF A = right();
     QPointF AP = A + QPointF(d, 0);
@@ -81,7 +80,6 @@ QPointF Plate::top() {
 QPointF Plate::center() {
     return QPointF(pos().x() + r(), pos().y() + r());
 }
-
 
 double Plate::x() {
     return pos().x() + r();

@@ -40,6 +40,7 @@ Level::Level(QWidget *parent) {
 
     _ball = new Ball(this);
     _scene->addItem(_ball);
+    setMouseTracking(true);
 }
 
 Level::~Level() {
@@ -64,10 +65,11 @@ void Level::mouseMoveEvent(QMouseEvent *event)
 void Level::mousePressEvent(QMouseEvent *event)
 {
     Bullet* bullet=new Bullet();
-    bullet->setPos(_plate->x(), _plate->y() - _plate->r());
+    bullet->setPos(_plate->top());
     _scene->addItem(bullet);
 }
 
 const char* Level::plate_pic_address = ":/images/plate.png";
+const char* Level::bullet_pic_address = ":/images/bullet.png";
 const char* Level::ball_pic_address = ":/images/plate.png";
 const char* Level::brick_pic_address = ":/images/brick.png";

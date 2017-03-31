@@ -14,6 +14,7 @@ public slots:
     void move();
 private:
     double _angle;
+    double _speed;
 };
 
 #endif // BULLET

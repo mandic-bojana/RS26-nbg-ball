@@ -29,7 +29,6 @@ public:
 public slots:
     void keyPressEvent(QKeyEvent *event);
 
-
 private:
     double _excess;
     double _r;

@@ -71,7 +71,7 @@ void Ball::move() {
         }
     }
 
-    if(_timer->interval()>=3) {
+    if(_timer->interval()>=5) {
         interval -= 0.001;
         _timer->setInterval(interval);
     }
