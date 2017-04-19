@@ -22,6 +22,14 @@ public:
     void bounce_vertical();
     void bounce_horizontal();
 
+    bool goes_to(double px, double py);
+    bool goes_to(QPointF P);
+    bool goes_up();
+    bool goes_down();
+    bool goes_right();
+    bool goes_left();
+
+    QPointF C();
     double x();
     double y();
     double r();

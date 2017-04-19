@@ -16,13 +16,15 @@ SOURCES += main.cpp \
     level.cpp \
     plate.cpp \
     ball.cpp \
-    brick.cpp
+    brick.cpp \
+    bullet.cpp
 
 HEADERS  += \
     level.h \
     plate.h \
     ball.h \
-    brick.h
+    brick.h \
+    bullet.h
 
 FORMS    +=
 

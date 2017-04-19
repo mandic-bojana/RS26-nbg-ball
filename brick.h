@@ -14,6 +14,11 @@ public:
     double width();
     double height();
 
+    QPointF top_left();
+    QPointF top_right();
+    QPointF bottom_left();
+    QPointF bottom_right();
+
 private:
     double _width;
     double _height;
