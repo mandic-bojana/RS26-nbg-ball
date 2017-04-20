@@ -8,9 +8,9 @@ extern Level *level;
 
 Plate::Plate(QGraphicsView *view, QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
-    _excess = 40;
-    _r = 150;
-    setPixmap(QPixmap(level->plate_pic_address).scaled(300, 300));
+    _excess = 30;
+    _r = 100;
+    setPixmap(QPixmap(level->plate_pic_address).scaled(2*_r, 2*_r));
     setPos(view->width()/2 - r(), view->height() - _excess);
 }
 

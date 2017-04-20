@@ -35,3 +35,8 @@ QPointF Brick::bottom_left() {
 QPointF Brick::bottom_right() {
     return pos() + QPointF(_width, _height);
 }
+
+void Brick::hit() {
+    scene()->removeItem(this);
+    delete this;
+}

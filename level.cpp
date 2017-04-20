@@ -34,7 +34,6 @@ Level::Level(QWidget *parent) {
     for(int i = 2; i < bricks_row - 2; i++)
         for(int j = 3; j < 7; j++) {
             Brick* brick = new Brick(brick_width, brick_height, bricks_space + i * (brick_width + bricks_space), bricks_space + j * (brick_height + bricks_space));
-            _bricks.push_back(brick);
             _scene->addItem(brick);
         }
 
@@ -50,22 +49,15 @@ Level::~Level() {
     delete _plate;
 }
 
-vector<Brick *> *Level::bricks() {
-    return &_bricks;
-}
-
 Plate *Level::plate() {
     return _plate;
 }
 
-void Level::mouseMoveEvent(QMouseEvent *event)
-{
-//    qDebug()<<event->x();
+void Level::mouseMoveEvent(QMouseEvent *event) {
     _plate->move(event->x() - _plate->x());
 }
 
-void Level::mousePressEvent(QMouseEvent *event)
-{
+void Level::mousePressEvent(QMouseEvent *event) {
     Bullet* bullet=new Bullet();
     bullet->setPos(_plate->top());
     _scene->addItem(bullet);

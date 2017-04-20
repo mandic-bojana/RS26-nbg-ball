@@ -18,11 +18,9 @@ public:
     Level(QWidget *parent = 0);
     ~Level();
     Plate* plate();
-    vector<Brick*> *bricks();
-
 
  public slots:
-    void mouseMoveEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
 
     static const char* plate_pic_address;
@@ -34,7 +32,6 @@ private:
     QGraphicsScene *_scene;
     Plate *_plate;
     Ball *_ball;
-    vector<Brick*> _bricks;
 
     int bricks_row;
     int bricks_column;

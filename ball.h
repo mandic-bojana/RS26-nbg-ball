@@ -7,12 +7,13 @@
 #include <QGraphicsItem>
 #include <QTimer>
 #include <math.h>
+#include "brick.h"
 
 class Ball: public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    Ball(QGraphicsView *view, QGraphicsItem *parent = 0);
+    Ball(QGraphicsView* view, QGraphicsItem* parent = 0);
     ~Ball();
 
     void bounce(double alpha);
@@ -20,6 +21,9 @@ public:
     void bounce_point(double px, double py);
     void bounce_vertical();
     void bounce_horizontal();
+    bool bounce_brick(Brick* brick);
+
+    double angle_to(QPointF P);
 
     bool goes_to(double px, double py);
     bool goes_to(QPointF P);
