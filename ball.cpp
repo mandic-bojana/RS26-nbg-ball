@@ -22,7 +22,6 @@ Ball::Ball(QGraphicsView *view, QGraphicsItem *parent)
     interval = 9;
     _timer = new QTimer();
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(move()));
-    _timer->start(interval);
 }
 
 Ball::~Ball() {
@@ -30,10 +29,22 @@ Ball::~Ball() {
     delete _timer;
 }
 
+double d2(QPointF A, QPointF B) {
+    return (A.x() - B.x()) * (A.x() - B.x()) + (A.y() - B.y()) * (A.y() - B.y());
+}
+
+double d(QPointF A, QPointF B) {
+    return sqrt(d2(A, B));
+}
+
+void Ball::activate() {
+    _timer->start(interval);
+}
+
 void Ball::move() {
     setPos(pos().x() + speed * cos(angle), pos().y() - speed * sin(angle));
 
-    if(pos().y() + 2*_r >= scene()->height()+2*_r) {
+    if(pos().y() + r() >= scene()->height()) {
         _timer->stop();
     }
     else if(pos().y() <= 0 && goes_up())
@@ -43,25 +54,29 @@ void Ball::move() {
     else if(pos().x() <= 0 && goes_left())
         bounce_vertical();
 
-    if(collidesWithItem(level->plate()) && goes_to(level->plate()->center())) {
+    if(d(level->plate()->center(), C()) <= level->plate()->r() + r() && goes_to(level->plate()->center())) {
         double k = (x() - level->plate()->x()) / (y() - level->plate()->y());
         double fi = atan(k);
         bounce(fi);
     }
 
-    vector<Brick*> *bricks = level->bricks();
+    QList<QGraphicsItem*> colliding_items = collidingItems();
+    QList<QGraphicsItem*>::iterator it = colliding_items.begin();
+    QList<QGraphicsItem*>::iterator it_end = colliding_items.end();
+
+    /*vector<Brick*> *bricks = level->bricks();
     vector<Brick*>::iterator it = bricks->begin();
-    vector<Brick*>::iterator it_end = bricks->end();
+    vector<Brick*>::iterator it_end = bricks->end();*/
     for(;it != it_end; it++) {
-        Brick* brick = *it;
-        if(collidesWithItem(brick)) {
+        if(typeid(**it) == typeid(Brick)) {
+            Brick* brick = (Brick*)*it;
             if(x() >= brick->x() && x() <= brick->x() + brick->width() && y() < brick->y() && goes_down()) //odozgo
                 bounce_horizontal();
             else if(x() >= brick->x() && x() <= brick->x() + brick->width() && y() > brick->y() + brick->height() && goes_up()) //odozdo
                 bounce_horizontal();
             else if(y() >= brick->y() && y() <= brick->y() + brick->height() && x() < brick->x() && goes_right()) //sleva
                 bounce_vertical();
-            else if(y() >= brick->y() && y() <= brick->y() + brick->height() && x() > brick->x() + brick->width() && goes_right()) //zdesna
+            else if(y() >= brick->y() && y() <= brick->y() + brick->height() && x() > brick->x() + brick->width() && goes_left()) //zdesna
                 bounce_vertical();
             else if(x() >= brick->x() + brick->width() && y() <= brick->y() && goes_to(brick->top_right())) //gore-desno
                 bounce_point(brick->top_right());
@@ -71,13 +86,14 @@ void Ball::move() {
                 bounce_point(brick->top_left());
             else if(x() <= brick->x() && y() >= brick->y() + brick->height() && goes_to(brick->bottom_left())) //dole-levo
                 bounce_point(brick->bottom_left());
+            else continue;
             scene()->removeItem(brick);
-            bricks->erase(it);
+            //level->bricks()->erase(it);
         }
     }
 
-    if(_timer->interval() >= 6) {
-        interval -= 0.001;
+    if(_timer->interval() > 6) {
+        interval -= 0.0001;
         _timer->setInterval(interval);
     }
 }
@@ -108,13 +124,6 @@ void Ball::bounce_horizontal() {
     Ball::bounce(0);
 }
 
-double d2(QPointF A, QPointF B) {
-    return (A.x() - B.x()) * (A.x() - B.x()) + (A.y() - B.y()) * (A.y() - B.y());
-}
-
-double d(QPointF A, QPointF B) {
-    return sqrt(d2(A, B));
-}
 
 bool Ball::goes_to(double px, double py) {
     return goes_to(QPointF(px, py));

@@ -26,7 +26,7 @@ Level::Level(QWidget *parent) {
 
     bricks_row = 15;
     bricks_column = 20;
-    bricks_space = 5;
+    bricks_space = 0;
 
     double brick_width = (width() - bricks_space)/bricks_row - bricks_space;
     double brick_height = (height() - bricks_space)/bricks_column - bricks_space;
@@ -41,6 +41,8 @@ Level::Level(QWidget *parent) {
     _ball = new Ball(this);
     _scene->addItem(_ball);
     setMouseTracking(true);
+    setCursor(Qt::BlankCursor);
+    _ball->activate();
 }
 
 Level::~Level() {

@@ -8,7 +8,6 @@
 #include <QTimer>
 #include <math.h>
 
-
 class Ball: public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
@@ -33,6 +32,8 @@ public:
     double x();
     double y();
     double r();
+
+    void activate();
 
 public slots:
     void move();
