@@ -19,3 +19,19 @@ double Brick::width() {
 double Brick::height() {
     return _height;
 }
+
+QPointF Brick::top_left() {
+    return pos();
+}
+
+QPointF Brick::top_right() {
+    return pos() + QPointF(_width, 0);
+}
+
+QPointF Brick::bottom_left() {
+    return pos() + QPointF(0, _height);
+}
+
+QPointF Brick::bottom_right() {
+    return pos() + QPointF(_width, _height);
+}

@@ -2,6 +2,7 @@
 #include "level.h"
 #include <QDebug>
 #include <math.h>
+#include <bullet.h>
 
 extern Level *level;
 
@@ -15,10 +16,15 @@ Plate::Plate(QGraphicsView *view, QGraphicsItem *parent)
 
 void Plate::keyPressEvent(QKeyEvent *event)
 {
-    if(event->key()==Qt::Key_Right)
+    if(event->key() == Qt::Key_Right)
         move(10);
-    else if(event->key()==Qt::Key_Left)
+    else if(event->key() == Qt::Key_Left)
         move(-10);
+    else if(event->key() == Qt::Key_Up || event->key() == Qt::Key_Space) {
+        Bullet* bullet=new Bullet();
+        bullet->setPos(level->plate()->top());
+        level->scene()->addItem(bullet);
+    }
 }
 
 void Plate::resize_width(double d) {
@@ -61,24 +67,24 @@ void Plate::resize_height(double d) {
 }
 
 void Plate::move(double d) {
-    if(left().x() + d >= 0 && right().x() + d <= scene()->width())
+    if(x() + d >= 0 && x() + d <= scene()->width())
         setX(pos().x() + d);
 }
 
 QPointF Plate::left() {
-    return QPointF(pos().x() + r() - sqrt(r()*r() - (r()-_excess)*(r()-_excess)), pos().y() + _excess);
+    return QPointF(x() - sqrt(r()*r() - (r()-_excess)*(r()-_excess)), pos().y() + _excess);
 }
 
 QPointF Plate::right() {
-    return QPointF(pos().x() + r() + sqrt(r()*r() - (r()-_excess)*(r()-_excess)), pos().y() + _excess);
+    return QPointF(x() + sqrt(r()*r() - (r()-_excess)*(r()-_excess)), pos().y() + _excess);
 }
 
 QPointF Plate::top() {
-    return QPointF(pos().x() + r(), pos().y());
+    return QPointF(x(), pos().y());
 }
 
 QPointF Plate::center() {
-    return QPointF(pos().x() + r(), pos().y() + r());
+    return QPointF(x(), y());
 }
 
 double Plate::x() {

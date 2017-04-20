@@ -31,8 +31,8 @@ Level::Level(QWidget *parent) {
     double brick_width = (width() - bricks_space)/bricks_row - bricks_space;
     double brick_height = (height() - bricks_space)/bricks_column - bricks_space;
 
-    for(int i = 0; i < bricks_row; i++)
-        for(int j = 0; j < 3; j++) {
+    for(int i = 2; i < bricks_row - 2; i++)
+        for(int j = 3; j < 7; j++) {
             Brick* brick = new Brick(brick_width, brick_height, bricks_space + i * (brick_width + bricks_space), bricks_space + j * (brick_height + bricks_space));
             _bricks.push_back(brick);
             _scene->addItem(brick);
