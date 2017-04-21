@@ -19,6 +19,8 @@ public:
     QPointF bottom_left();
     QPointF bottom_right();
 
+    void hit();
+
 private:
     double _width;
     double _height;

@@ -1,6 +1,5 @@
 #include "ball.h"
 #include "level.h"
-#include "brick.h"
 #include <math.h>
 #include <vector>
 #include <QDebug>
@@ -17,12 +16,11 @@ Ball::Ball(QGraphicsView *view, QGraphicsItem *parent)
     speed = 3;
 
     setPixmap(QPixmap(level->ball_pic_address).scaled(2*_r, 2*_r));
-    setPos(-_r + view->width()/2, view->height() - /*excess*/40 - 2*_r);
+    setPos(-_r + view->width()/2, view->height() - /*excess*/30 - 2*_r);
 
     interval = 9;
     _timer = new QTimer();
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(move()));
-    _timer->start(interval);
 }
 
 Ball::~Ball() {
@@ -30,11 +28,31 @@ Ball::~Ball() {
     delete _timer;
 }
 
+double d2(QPointF A, QPointF B) {
+    return (A.x() - B.x()) * (A.x() - B.x()) + (A.y() - B.y()) * (A.y() - B.y());
+}
+
+double d(QPointF A, QPointF B) {
+    return sqrt(d2(A, B));
+}
+
+double Ball::angle_to(QPointF P) {
+    QPointF v = P - C();
+    double fi = atan2(v.y(), v.x());
+    return -fi;
+}
+
+void Ball::activate() {
+    _timer->start(interval);
+}
+
 void Ball::move() {
     setPos(pos().x() + speed * cos(angle), pos().y() - speed * sin(angle));
 
-    if(pos().y() + 2*_r >= scene()->height()+2*_r) {
-        _timer->stop();
+    if(pos().y() + r() >= scene()->height()) {
+        scene()->removeItem(this);
+        delete this;
+        return;
     }
     else if(pos().y() <= 0 && goes_up())
         bounce_horizontal();
@@ -42,54 +60,54 @@ void Ball::move() {
         bounce_vertical();
     else if(pos().x() <= 0 && goes_left())
         bounce_vertical();
+    if(d(level->plate()->center(), C()) <= level->plate()->r() + r() && goes_to(level->plate()->center()))
+        bounce_point(level->plate()->center());
 
-    if(collidesWithItem(level->plate()) && goes_to(level->plate()->center())) {
-        double k = (x() - level->plate()->x()) / (y() - level->plate()->y());
-        double fi = atan(k);
-        bounce(fi);
-    }
+    QList<QGraphicsItem*> colliding_items = collidingItems();
+    QList<QGraphicsItem*>::iterator it = colliding_items.begin();
+    QList<QGraphicsItem*>::iterator it_end = colliding_items.end();
 
-    vector<Brick*> *bricks = level->bricks();
-    vector<Brick*>::iterator it = bricks->begin();
-    vector<Brick*>::iterator it_end = bricks->end();
     for(;it != it_end; it++) {
-        Brick* brick = *it;
-        if(collidesWithItem(brick)) {
-            if(x() >= brick->x() && x() <= brick->x() + brick->width() && y() < brick->y() && goes_down()) //odozgo
-                bounce_horizontal();
-            else if(x() >= brick->x() && x() <= brick->x() + brick->width() && y() > brick->y() + brick->height() && goes_up()) //odozdo
-                bounce_horizontal();
-            else if(y() >= brick->y() && y() <= brick->y() + brick->height() && x() < brick->x() && goes_right()) //sleva
-                bounce_vertical();
-            else if(y() >= brick->y() && y() <= brick->y() + brick->height() && x() > brick->x() + brick->width() && goes_right()) //zdesna
-                bounce_vertical();
-            else if(x() >= brick->x() + brick->width() && y() <= brick->y() && goes_to(brick->top_right())) //gore-desno
-                bounce_point(brick->top_right());
-            else if(x() >= brick->x() + brick->width() && y() >= brick->y() + brick->height() && goes_to(brick->bottom_right())) //dole-desno
-                bounce_point(brick->bottom_right());
-            else if(x() <= brick->x() && y() <= brick->y() && goes_to(brick->top_left())) //gore-levo
-                bounce_point(brick->top_left());
-            else if(x() <= brick->x() && y() >= brick->y() + brick->height() && goes_to(brick->bottom_left())) //dole-levo
-                bounce_point(brick->bottom_left());
-            scene()->removeItem(brick);
-            bricks->erase(it);
+        if(typeid(**it) == typeid(Brick)) {
+            Brick* brick = (Brick*)*it;
+            if(bounce_brick(brick))
+                brick->hit();
         }
     }
 
-    if(_timer->interval() >= 6) {
-        interval -= 0.001;
+    if(_timer->interval() > 6) {
+        interval -= 0.0001;
         _timer->setInterval(interval);
     }
 }
 
+bool Ball::bounce_brick(Brick* brick) {
+    if(x() >= brick->x() && x() <= brick->x() + brick->width() && y() < brick->y() && goes_down()) //odozgo
+        bounce_horizontal();
+    else if(x() >= brick->x() && x() <= brick->x() + brick->width() && y() > brick->y() + brick->height() && goes_up()) //odozdo
+        bounce_horizontal();
+    else if(y() >= brick->y() && y() <= brick->y() + brick->height() && x() < brick->x() && goes_right()) //sleva
+        bounce_vertical();
+    else if(y() >= brick->y() && y() <= brick->y() + brick->height() && x() > brick->x() + brick->width() && goes_left()) //zdesna
+        bounce_vertical();
+    else if(x() >= brick->x() + brick->width() && y() <= brick->y() && goes_to(brick->top_right())) //gore-desno
+        bounce_point(brick->top_right());
+    else if(x() >= brick->x() + brick->width() && y() >= brick->y() + brick->height() && goes_to(brick->bottom_right())) //dole-desno
+        bounce_point(brick->bottom_right());
+    else if(x() <= brick->x() && y() <= brick->y() && goes_to(brick->top_left())) //gore-levo
+        bounce_point(brick->top_left());
+    else if(x() <= brick->x() && y() >= brick->y() + brick->height() && goes_to(brick->bottom_left())) //dole-levo
+        bounce_point(brick->bottom_left());
+    else return false;
+    return true;
+}
+
 void Ball::bounce_point(double px, double py) {
-    double k = (x() - px) / (y() - py);
-    double fi = atan(k);
-    bounce(fi);
+    bounce_point(QPointF(px, py));
 }
 
 void Ball::bounce_point(QPointF P) {
-    bounce_point(P.x(), P.y());
+    bounce(M_PI/2 + angle_to(P));
 }
 
 void Ball::bounce(double alpha) {
@@ -108,20 +126,12 @@ void Ball::bounce_horizontal() {
     Ball::bounce(0);
 }
 
-double d2(QPointF A, QPointF B) {
-    return (A.x() - B.x()) * (A.x() - B.x()) + (A.y() - B.y()) * (A.y() - B.y());
-}
-
-double d(QPointF A, QPointF B) {
-    return sqrt(d2(A, B));
-}
-
 bool Ball::goes_to(double px, double py) {
     return goes_to(QPointF(px, py));
 }
 
 bool Ball::goes_to(QPointF P) {
-    return d2(C() + QPointF(speed * cos(angle), - speed * sin(angle)), P) < d2(C(), P);
+    return cos(angle_to(P) - angle) > 0;
 }
 
 bool Ball::goes_up() {
