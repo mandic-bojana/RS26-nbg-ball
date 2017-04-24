@@ -13,12 +13,13 @@ Ball::Ball(QGraphicsView *view, QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
     _r = 10;
     angle = 1.5;
-    speed = 3;
+    speed = 5;
+    active = false;
 
     setPixmap(QPixmap(level->ball_pic_address).scaled(2*_r, 2*_r));
     setPos(-_r + view->width()/2, view->height() - /*excess*/30 - 2*_r);
 
-    interval = 9;
+    interval = 13;
     _timer = new QTimer();
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(move()));
 }
@@ -42,7 +43,12 @@ double Ball::angle_to(QPointF P) {
     return -fi;
 }
 
+bool Ball::is_active() {
+    return active;
+}
+
 void Ball::activate() {
+    active = true;
     _timer->start(interval);
 }
 
@@ -50,8 +56,8 @@ void Ball::move() {
     setPos(pos().x() + speed * cos(angle), pos().y() - speed * sin(angle));
 
     if(pos().y() + r() >= scene()->height()) {
-        scene()->removeItem(this);
-        delete this;
+        level->clean();
+        level->repeat_level();
         return;
     }
     else if(pos().y() <= 0 && goes_up())
@@ -66,7 +72,6 @@ void Ball::move() {
     QList<QGraphicsItem*> colliding_items = collidingItems();
     QList<QGraphicsItem*>::iterator it = colliding_items.begin();
     QList<QGraphicsItem*>::iterator it_end = colliding_items.end();
-
     for(;it != it_end; it++) {
         if(typeid(**it) == typeid(Brick)) {
             Brick* brick = (Brick*)*it;
@@ -75,7 +80,10 @@ void Ball::move() {
         }
     }
 
-    if(_timer->interval() > 6) {
+    if(level->solved())
+        level->clean();
+
+    if(_timer->interval() > 8) {
         interval -= 0.0001;
         _timer->setInterval(interval);
     }

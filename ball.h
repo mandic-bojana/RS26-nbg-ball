@@ -37,6 +37,7 @@ public:
     double y();
     double r();
 
+    bool is_active();
     void activate();
 
 public slots:
@@ -47,6 +48,7 @@ private:
     double _r;
     double angle;
     double speed;
+    bool active;
     QTimer *_timer;
 };
 

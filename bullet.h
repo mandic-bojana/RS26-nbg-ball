@@ -10,8 +10,11 @@ class Bullet: public QObject, public QGraphicsPixmapItem
     Q_OBJECT
 public:
     Bullet(double angle = 0, QGraphicsItem * parent = 0);
+    void destroy();
+
 public slots:
     void move();
+
 private:
     double _angle;
     double _speed;

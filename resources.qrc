@@ -1,7 +1,17 @@
 <RCC>
-    <qresource prefix="/images">
-        <file>plate.png</file>
-        <file>bullet.png</file>
-        <file>brick.png</file>
+    <qresource prefix="/">
+        <file>images/brick.png</file>
+        <file>images/bullet.png</file>
+        <file>images/plate.png</file>
+        <file>levels/0.nbg</file>
+        <file>levels/0.png</file>
+        <file>levels/1.nbg</file>
+        <file>levels/1.png</file>
+        <file>levels/2.nbg</file>
+        <file>levels/2.png</file>
+        <file>levels/3.nbg</file>
+        <file>levels/3.png</file>
+        <file>levels/4.png</file>
+        <file>levels/4.nbg</file>
     </qresource>
 </RCC>
