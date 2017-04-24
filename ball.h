@@ -13,7 +13,7 @@ class Ball: public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    Ball(QGraphicsView* view, QGraphicsItem* parent = 0);
+    Ball(QGraphicsItem* parent = 0);
     ~Ball();
 
     void bounce(double alpha);
@@ -39,6 +39,7 @@ public:
 
     bool is_active();
     void activate();
+    void set_to_plate();
 
 public slots:
     void move();

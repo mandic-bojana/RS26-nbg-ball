@@ -13,7 +13,7 @@ class Plate: public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    Plate(QGraphicsView *view, QGraphicsItem* parent = 0);
+    Plate(QGraphicsItem* parent = 0);
     double x();
     double y();
     double r();
@@ -25,9 +25,6 @@ public:
     QPointF right();
     QPointF top();
     QPointF center();
-
-public slots:
-    void keyPressEvent(QKeyEvent *event);
 
 private:
     double _excess;

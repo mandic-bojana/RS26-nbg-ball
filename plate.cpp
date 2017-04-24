@@ -6,25 +6,12 @@
 
 extern Level *level;
 
-Plate::Plate(QGraphicsView *view, QGraphicsItem *parent)
+Plate::Plate(QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
     _excess = 30;
     _r = 200;
     setPixmap(QPixmap(level->plate_pic_address).scaled(2*_r, 2*_r));
-    setPos(view->width()/2 - r(), view->height() - _excess);
-}
-
-void Plate::keyPressEvent(QKeyEvent *event)
-{
-    if(event->key() == Qt::Key_Right)
-        move(10);
-    else if(event->key() == Qt::Key_Left)
-        move(-10);
-    else if(event->key() == Qt::Key_Up || event->key() == Qt::Key_Space) {
-        Bullet* bullet=new Bullet();
-        bullet->setPos(level->plate()->top());
-        level->scene()->addItem(bullet);
-    }
+    setPos(level->width()/2 - r(), level->height() - _excess);
 }
 
 void Plate::resize_width(double d) {
@@ -44,6 +31,9 @@ void Plate::resize_width(double d) {
         _r = R;
         setPixmap(QPixmap(level->plate_pic_address).scaled(2*R, 2*R));
     }
+
+    if(!level->ball()->is_active())
+        level->ball()->set_to_plate();
 }
 
 void Plate::resize_height(double d) {
@@ -64,11 +54,17 @@ void Plate::resize_height(double d) {
         _r = R;
         setPixmap(QPixmap(level->plate_pic_address).scaled(2*R, 2*R));
     }
+
+    if(!level->ball()->is_active())
+        level->ball()->set_to_plate();
 }
 
 void Plate::move(double d) {
     if(x() + d >= 0 && x() + d <= scene()->width())
         setX(pos().x() + d);
+
+    if(!level->ball()->is_active())
+        level->ball()->set_to_plate();
 }
 
 QPointF Plate::left() {
@@ -99,12 +95,11 @@ double Plate::r() {
     return _r;
 }
 
-double Plate::excess()
-{
+double Plate::excess() {
     return _excess;
 }
 
-const double Plate::max_excess = 100;
+const double Plate::max_excess = 60;
 const double Plate::max_length = 400;
 const double Plate::min_excess = 20;
-const double Plate::min_length = 50;
+const double Plate::min_length = 150;

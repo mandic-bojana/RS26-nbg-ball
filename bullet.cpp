@@ -9,14 +9,21 @@
 
 extern Level *level;
 
-Bullet::Bullet(double angle, QGraphicsItem* parent)
-    : QObject(), QGraphicsPixmapItem(parent), _angle(angle), _speed(10) {
+Bullet::Bullet(QGraphicsItem* parent)
+    : QObject(), QGraphicsPixmapItem(parent), _speed(10) {
     setPixmap(QPixmap(level->bullet_pic_address));
-    setRotation(angle);
+    setRotation(_angle = 0);
+    setPos(level->plate()->top() - QPointF(pixmap().width()/2, pixmap().height()));
 
     QTimer* timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
     timer->start(25);
+}
+
+Bullet::Bullet(int x, int y, double angle, QGraphicsItem *parent)
+    : Bullet(parent) {
+    setPos(x, y);
+    setRotation(_angle = angle);
 }
 
 void Bullet::move() {
@@ -39,11 +46,11 @@ void Bullet::move() {
         }
     }
 
+    if(hit)
+        destroy();
+
     if(level->solved())
         level->clean();
-
-    /*if(hit)
-        destroy();*/
 }
 
 void Bullet::destroy() {

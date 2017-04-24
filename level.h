@@ -15,9 +15,11 @@ using namespace std;
 class Level : public QGraphicsView
 {
 public:
-    Level(int level = 0, QWidget *parent = 0);
+    Level(int level = 0, int width = 1024, int height = 768, QWidget *parent = 0);
     ~Level();
+
     Plate* plate();
+    Ball* ball();
 
     void load_scene();
     void load_bricks();
@@ -34,6 +36,7 @@ public:
 public slots:
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     QGraphicsScene *_scene;
