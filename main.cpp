@@ -7,7 +7,7 @@ Level *level;
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
-    level = new Level(2);
+    level = new Level();
     level->load_scene();
     level->show();
 
