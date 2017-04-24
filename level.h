@@ -23,6 +23,7 @@ public:
     void load_bricks();
     bool solved();
     void next_level();
+    void repeat_level();
     void clean();
 
     static const char* plate_pic_address;

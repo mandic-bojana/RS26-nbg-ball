@@ -12,7 +12,7 @@ extern Level *level;
 Ball::Ball(QGraphicsView *view, QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
     _r = 10;
-    angle = M_PI/2;
+    angle = 1.5;
     speed = 5;
     active = false;
 
@@ -56,7 +56,8 @@ void Ball::move() {
     setPos(pos().x() + speed * cos(angle), pos().y() - speed * sin(angle));
 
     if(pos().y() + r() >= scene()->height()) {
-        _timer->stop();
+        level->clean();
+        level->repeat_level();
         return;
     }
     else if(pos().y() <= 0 && goes_up())
@@ -71,7 +72,6 @@ void Ball::move() {
     QList<QGraphicsItem*> colliding_items = collidingItems();
     QList<QGraphicsItem*>::iterator it = colliding_items.begin();
     QList<QGraphicsItem*>::iterator it_end = colliding_items.end();
-
     for(;it != it_end; it++) {
         if(typeid(**it) == typeid(Brick)) {
             Brick* brick = (Brick*)*it;

@@ -8,7 +8,7 @@
 #include <typeinfo>
 
 #define MAXLEN 100
-#define LEVELS_NO 4
+#define LEVELS_NO 5
 
 using namespace std;
 
@@ -101,9 +101,25 @@ void Level::clean() {
     delete _ball;
     scene()->removeItem(_plate);
     delete _plate;
+
+    QList<QGraphicsItem*> items = scene()->items();
+    QList<QGraphicsItem*>::iterator it = items.begin();
+    QList<QGraphicsItem*>::iterator it_end = items.end();
+    for(; it != it_end; it++)
+        if(typeid(**it) == typeid(Bullet)) {
+            Bullet* bullet = (Bullet*)*it;
+            bullet->destroy();
+        }
+        else if(typeid(**it) == typeid(Brick)) {
+            Brick* bullet = (Brick*)*it;
+            bullet->hit();
+        }
     _finished = true;
 }
 
+void Level::repeat_level() {
+    load_scene();
+}
 void Level::next_level() {
     _level++;
     if(_level < LEVELS_NO)
