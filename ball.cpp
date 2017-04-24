@@ -9,7 +9,7 @@ using namespace std;
 
 extern Level *level;
 
-Ball::Ball(QGraphicsView *view, QGraphicsItem *parent)
+Ball::Ball(QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
     _r = 10;
     angle = 1.5;
@@ -17,7 +17,7 @@ Ball::Ball(QGraphicsView *view, QGraphicsItem *parent)
     active = false;
 
     setPixmap(QPixmap(level->ball_pic_address).scaled(2*_r, 2*_r));
-    setPos(-_r + view->width()/2, view->height() - /*excess*/30 - 2*_r);
+    set_to_plate();
 
     interval = 13;
     _timer = new QTimer();
@@ -27,6 +27,10 @@ Ball::Ball(QGraphicsView *view, QGraphicsItem *parent)
 Ball::~Ball() {
     _timer->stop();
     delete _timer;
+}
+
+void Ball::set_to_plate() {
+    setPos(level->plate()->top() - QPointF(_r, 2*_r));
 }
 
 double d2(QPointF A, QPointF B) {

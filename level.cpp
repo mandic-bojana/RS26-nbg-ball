@@ -3,6 +3,7 @@
 #include <QBrush>
 #include <QImage>
 #include <QDebug>
+#include <QIODevice>
 #include <stdlib.h>
 #include <string.h>
 #include <typeinfo>
@@ -21,18 +22,17 @@ QString level_addr(int i, const char* extension = ".nbg") {
     return addr;
 }
 
-Level::Level(int level, QWidget *parent) {
+Level::Level(int level, int width, int height, QWidget *parent) {
     setParent(parent);
 
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFixedSize(800, 600);
+    setFixedSize(width, height);
 
     setMouseTracking(true);
     setCursor(Qt::BlankCursor);
 
     _level = level;
-    load_scene();
 }
 
 void Level::load_scene() {
@@ -41,16 +41,15 @@ void Level::load_scene() {
     _scene = new QGraphicsScene();
     setScene(_scene);
 
-    _scene->setSceneRect(0, 0, 800, 600);
+    _scene->setSceneRect(0, 0, width(), height());
     _scene->setBackgroundBrush(QBrush(QImage(level_addr(_level, ".png")).scaledToWidth(width())));
 
-    _ball = new Ball(this);
-    _scene->addItem(_ball);
-
-    _plate = new Plate(this);
+    _plate = new Plate();
     _plate->setFlag(QGraphicsItem::ItemIsFocusable);
-    _plate->setFocus();
     _scene->addItem(_plate);
+
+    _ball = new Ball();
+    _scene->addItem(_ball);
 
     load_bricks();
 }
@@ -78,12 +77,15 @@ void Level::load_bricks() {
 }
 
 Level::~Level() {
-    //delete _scene;
-    delete _plate;
+    clean();
 }
 
 Plate *Level::plate() {
     return _plate;
+}
+
+Ball *Level::ball() {
+    return _ball;
 }
 
 bool Level::solved() {
@@ -97,10 +99,12 @@ bool Level::solved() {
 }
 
 void Level::clean() {
-    scene()->removeItem(_ball);
-    delete _ball;
+    _finished = true;
+
     scene()->removeItem(_plate);
     delete _plate;
+    scene()->removeItem(_ball);
+    delete _ball;
 
     QList<QGraphicsItem*> items = scene()->items();
     QList<QGraphicsItem*>::iterator it = items.begin();
@@ -114,7 +118,6 @@ void Level::clean() {
             Brick* bullet = (Brick*)*it;
             bullet->hit();
         }
-    _finished = true;
 }
 
 void Level::repeat_level() {
@@ -141,9 +144,29 @@ void Level::mousePressEvent(QMouseEvent *event) {
         _ball->activate();
     else {
         Bullet* bullet=new Bullet();
-        bullet->setPos(_plate->top());
         _scene->addItem(bullet);
     }
+}
+
+void Level::keyPressEvent(QKeyEvent *event) {
+    if(_finished)
+        return;
+    else if(event->key() == Qt::Key_Right)
+        _plate->move(10);
+    else if(event->key() == Qt::Key_Left)
+        _plate->move(-10);
+    else if(event->key() == Qt::Key_Up || event->key() == Qt::Key_Space) {
+        Bullet* bullet=new Bullet();
+        scene()->addItem(bullet);
+    }
+    else if(event->key() == Qt::Key_A)
+        _plate->resize_width(-10);
+    else if(event->key() == Qt::Key_D)
+        _plate->resize_width(10);
+    else if(event->key() == Qt::Key_W)
+        _plate->resize_height(10);
+    else if(event->key() == Qt::Key_S)
+        _plate->resize_height(-10);
 }
 
 const char* Level::plate_pic_address = ":/images/plate.png";
