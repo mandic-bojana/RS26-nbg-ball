@@ -15,7 +15,7 @@ using namespace std;
 class Level : public QGraphicsView
 {
 public:
-    Level(int level = 0, int width = 1024, int height = 768, QWidget *parent = 0);
+    Level(QWidget *parent = 0, int level = 0);
     ~Level();
 
     Plate* plate();
@@ -28,10 +28,31 @@ public:
     void repeat_level();
     void clean();
 
+    double scaled(double x);
+
     static const char* plate_pic_address;
     static const char* ball_pic_address;
     static const char* brick_pic_address;
     static const char* bullet_pic_address;
+
+    static const double default_ball_radius;
+    static const double default_ball_speed;
+    static const double default_ball_angle;
+    static const double default_ball_timer_interval;
+    static const double default_bullet_radius;
+    static const double default_bullet_speed;
+    static const double default_bullet_timer_interval;
+    static const double default_plate_excess;
+    static const double default_plate_radius;
+    static const double default_plate_move;
+    static const double default_plate_resize_height;
+    static const double default_plate_resize_width;
+
+    static const double min_ball_timer_interval;
+    static const double max_plate_excess;
+    static const double max_plate_length;
+    static const double min_plate_excess;
+    static const double min_plate_length;
 
 public slots:
     void mouseMoveEvent(QMouseEvent* event);

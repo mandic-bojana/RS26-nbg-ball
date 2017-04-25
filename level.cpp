@@ -22,15 +22,14 @@ QString level_addr(int i, const char* extension = ".nbg") {
     return addr;
 }
 
-Level::Level(int level, int width, int height, QWidget *parent) {
+Level::Level(QWidget *parent, int level) {
     setParent(parent);
 
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFixedSize(width, height);
 
     setMouseTracking(true);
-    setCursor(Qt::BlankCursor);
+    setCursor(Qt::CrossCursor);
 
     _level = level;
 }
@@ -47,6 +46,7 @@ void Level::load_scene() {
     _plate = new Plate();
     _plate->setFlag(QGraphicsItem::ItemIsFocusable);
     _scene->addItem(_plate);
+    _plate->setZValue(1);
 
     _ball = new Ball();
     _scene->addItem(_ball);
@@ -60,6 +60,7 @@ void Level::load_bricks() {
     char line[MAXLEN];
     file.readLine(line, MAXLEN);
     sscanf(line, "%d %d %d\n", &bricks_row, &bricks_column, &bricks_space);
+    bricks_space = scaled(bricks_space);
 
     double brick_width = ((double)width() - bricks_space)/bricks_row - bricks_space;
     double brick_height = ((double)2/3*height() - bricks_space)/bricks_column - bricks_space;
@@ -100,24 +101,11 @@ bool Level::solved() {
 
 void Level::clean() {
     _finished = true;
+    _scene->clear();
+}
 
-    scene()->removeItem(_plate);
-    delete _plate;
-    scene()->removeItem(_ball);
-    delete _ball;
-
-    QList<QGraphicsItem*> items = scene()->items();
-    QList<QGraphicsItem*>::iterator it = items.begin();
-    QList<QGraphicsItem*>::iterator it_end = items.end();
-    for(; it != it_end; it++)
-        if(typeid(**it) == typeid(Bullet)) {
-            Bullet* bullet = (Bullet*)*it;
-            bullet->destroy();
-        }
-        else if(typeid(**it) == typeid(Brick)) {
-            Brick* bullet = (Brick*)*it;
-            bullet->hit();
-        }
+double Level::scaled(double x) {
+    return x/1024*width();
 }
 
 void Level::repeat_level() {
@@ -130,6 +118,11 @@ void Level::next_level() {
 }
 
 void Level::mouseMoveEvent(QMouseEvent *event) {
+    if(event->x() <= 5 || event->x() >= width() - 5 || event->y() <= 5 || event->y() >= height() - 5)
+        setCursor(Qt::ForbiddenCursor);
+    else
+        setCursor(Qt::CrossCursor);
+
     if(!_finished) {
         _plate->move(event->x() - _plate->x());
         if(!_ball->is_active())
@@ -149,27 +142,59 @@ void Level::mousePressEvent(QMouseEvent *event) {
 }
 
 void Level::keyPressEvent(QKeyEvent *event) {
-    if(_finished)
+    if(event->key() == Qt::Key_Escape)
+        parentWidget()->close();
+    else if(_finished)
         return;
-    else if(event->key() == Qt::Key_Right)
-        _plate->move(10);
-    else if(event->key() == Qt::Key_Left)
-        _plate->move(-10);
-    else if(event->key() == Qt::Key_Up || event->key() == Qt::Key_Space) {
-        Bullet* bullet=new Bullet();
+    else switch(event->key()) {
+    case Qt::Key_Right:
+        _plate->move(scaled(default_plate_move));
+        break;
+    case Qt::Key_Left:
+        _plate->move(-scaled(default_plate_move));
+        break;
+    case Qt::Key_Up:
+    case Qt::Key_Space: {
+        Bullet* bullet = new Bullet();
         scene()->addItem(bullet);
+        break;
     }
-    else if(event->key() == Qt::Key_A)
-        _plate->resize_width(-10);
-    else if(event->key() == Qt::Key_D)
-        _plate->resize_width(10);
-    else if(event->key() == Qt::Key_W)
-        _plate->resize_height(10);
-    else if(event->key() == Qt::Key_S)
-        _plate->resize_height(-10);
+    case Qt::Key_A:
+        _plate->resize_width(-scaled(default_plate_resize_width));
+        break;
+    case Qt::Key_D:
+        _plate->resize_width(scaled(default_plate_resize_width));
+        break;
+    case Qt::Key_W:
+        _plate->resize_height(scaled(default_plate_resize_height));
+        break;
+    case Qt::Key_S:
+        _plate->resize_height(-scaled(default_plate_resize_height));
+        break;
+    }
 }
 
 const char* Level::plate_pic_address = ":/images/plate.png";
 const char* Level::bullet_pic_address = ":/images/bullet.png";
 const char* Level::ball_pic_address = ":/images/plate.png";
 const char* Level::brick_pic_address = ":/images/brick.png";
+
+const double Level::default_ball_radius = 10;
+const double Level::default_ball_speed = 5;
+const double Level::default_ball_angle = 1.2;
+const double Level::default_ball_timer_interval = 13;
+const double Level::default_bullet_radius = 7.5;
+const double Level::default_bullet_speed = 10;
+const double Level::default_bullet_timer_interval = 25;
+const double Level::default_plate_excess = 40;
+const double Level::default_plate_radius = 200;
+
+const double Level::default_plate_move = 20;
+const double Level::default_plate_resize_height = 10;
+const double Level::default_plate_resize_width = 20;
+
+const double Level::min_ball_timer_interval = 7;
+const double Level::max_plate_excess = 60;
+const double Level::max_plate_length = 400;
+const double Level::min_plate_excess = 20;
+const double Level::min_plate_length = 150;

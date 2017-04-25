@@ -19,6 +19,7 @@ public slots:
 private:
     double _angle;
     double _speed;
+    double _r;
 };
 
 #endif // BULLET
