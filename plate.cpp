@@ -8,10 +8,10 @@ extern Level *level;
 
 Plate::Plate(QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
-    _excess = 30;
-    _r = 200;
+    _excess = level->scaled(level->default_plate_excess);
+    _r = level->scaled(level->default_plate_radius);
     setPixmap(QPixmap(level->plate_pic_address).scaled(2*_r, 2*_r));
-    setPos(level->width()/2 - r(), level->height() - _excess);
+    setPos(level->width()/2 - _r, level->height() - _excess);
 }
 
 void Plate::resize_width(double d) {
@@ -26,7 +26,7 @@ void Plate::resize_width(double d) {
     double R = y - T.y();                           //novi poluprecnik
     double len = 2*(AP.x()-T.x());                  //nova duzina podloge
 
-    if(len <= max_length && len >= min_length) {
+    if(len <= level->scaled(level->max_plate_length) && len >= level->scaled(level->min_plate_length)) {
         setX(x() - R);
         _r = R;
         setPixmap(QPixmap(level->plate_pic_address).scaled(2*R, 2*R));
@@ -37,7 +37,7 @@ void Plate::resize_width(double d) {
 }
 
 void Plate::resize_height(double d) {
-    if(_excess + d <= max_excess && _excess + d >= min_excess) {
+    if(_excess + d <= level->scaled(level->max_plate_excess) && _excess + d >= level->scaled(level->min_plate_excess)) {
         QPointF A = right();
         QPointF T = top();
         QPointF TP = T - QPointF(0, d);
@@ -68,11 +68,11 @@ void Plate::move(double d) {
 }
 
 QPointF Plate::left() {
-    return QPointF(x() - sqrt(r()*r() - (r()-_excess)*(r()-_excess)), pos().y() + _excess);
+    return QPointF(x() - sqrt(_r*_r - (_r-_excess)*(_r-_excess)), pos().y() + _excess);
 }
 
 QPointF Plate::right() {
-    return QPointF(x() + sqrt(r()*r() - (r()-_excess)*(r()-_excess)), pos().y() + _excess);
+    return QPointF(x() + sqrt(_r*_r - (_r-_excess)*(_r-_excess)), pos().y() + _excess);
 }
 
 QPointF Plate::top() {
@@ -84,11 +84,11 @@ QPointF Plate::center() {
 }
 
 double Plate::x() {
-    return pos().x() + r();
+    return pos().x() + _r;
 }
 
 double Plate::y() {
-    return pos().y() + r();
+    return pos().y() + _r;
 }
 
 double Plate::r() {
@@ -98,8 +98,3 @@ double Plate::r() {
 double Plate::excess() {
     return _excess;
 }
-
-const double Plate::max_excess = 60;
-const double Plate::max_length = 400;
-const double Plate::min_excess = 20;
-const double Plate::min_length = 150;

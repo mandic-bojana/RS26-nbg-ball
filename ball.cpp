@@ -11,15 +11,15 @@ extern Level *level;
 
 Ball::Ball(QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
-    _r = 10;
-    angle = 1.5;
-    speed = 5;
+    _r = level->scaled(level->default_ball_radius);
+    angle = level->default_ball_angle;
+    speed = level->scaled(level->default_ball_speed);
     active = false;
 
     setPixmap(QPixmap(level->ball_pic_address).scaled(2*_r, 2*_r));
     set_to_plate();
 
-    interval = 13;
+    interval = level->default_ball_timer_interval;
     _timer = new QTimer();
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(move()));
 }
@@ -87,7 +87,7 @@ void Ball::move() {
     if(level->solved())
         level->clean();
 
-    if(_timer->interval() > 8) {
+    if(_timer->interval() > level->min_ball_timer_interval) {
         interval -= 0.0001;
         _timer->setInterval(interval);
     }

@@ -29,10 +29,6 @@ public:
 private:
     double _excess;
     double _r;
-    static const double max_excess;
-    static const double max_length;
-    static const double min_excess;
-    static const double min_length;
 };
 
 #endif // PLATE_H

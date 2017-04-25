@@ -10,14 +10,16 @@
 extern Level *level;
 
 Bullet::Bullet(QGraphicsItem* parent)
-    : QObject(), QGraphicsPixmapItem(parent), _speed(10) {
-    setPixmap(QPixmap(level->bullet_pic_address));
+    : QObject(), QGraphicsPixmapItem(parent) {
+    _r = level->scaled(level->default_bullet_radius);
+    setPixmap(QPixmap(level->bullet_pic_address).scaled(2*_r, 2*_r));
     setRotation(_angle = 0);
-    setPos(level->plate()->top() - QPointF(pixmap().width()/2, pixmap().height()));
+    _speed = level->scaled(level->default_bullet_speed);
+    setPos(level->plate()->top() - QPointF(_r, _r));
 
     QTimer* timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
-    timer->start(25);
+    timer->start(level->default_bullet_timer_interval);
 }
 
 Bullet::Bullet(int x, int y, double angle, QGraphicsItem *parent)
