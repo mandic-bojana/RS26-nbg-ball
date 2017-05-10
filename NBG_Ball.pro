@@ -17,14 +17,22 @@ SOURCES += main.cpp \
     plate.cpp \
     ball.cpp \
     brick.cpp \
-    bullet.cpp
+    bullet.cpp \
+    message.cpp \
+    fallingitem.cpp \
+    mode.cpp \
+    package.cpp
 
 HEADERS  += \
     level.h \
     plate.h \
     ball.h \
     brick.h \
-    bullet.h
+    bullet.h \
+    message.h \
+    fallingitem.h \
+    mode.h \
+    package.h
 
 FORMS    +=
 

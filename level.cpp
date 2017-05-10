@@ -7,6 +7,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <typeinfo>
+#include <cstddef>
+#include <iostream>
+#include "mode.h"
+
 
 #define MAXLEN 100
 #define LEVELS_NO 5
@@ -36,6 +40,7 @@ Level::Level(QWidget *parent, int level) {
 
 void Level::load_scene() {
     _finished = false;
+    _mode = NULL;
 
     _scene = new QGraphicsScene();
     setScene(_scene);
@@ -50,6 +55,7 @@ void Level::load_scene() {
 
     _ball = new Ball();
     _scene->addItem(_ball);
+    _ball->setZValue(1);
 
     load_bricks();
 }
@@ -89,17 +95,23 @@ Ball *Level::ball() {
     return _ball;
 }
 
-bool Level::solved() {
+QList<Brick*> Level::bricks() {
+    QList<Brick*> bricks;
     QList<QGraphicsItem*> items = scene()->items();
     QList<QGraphicsItem*>::iterator it = items.begin();
     QList<QGraphicsItem*>::iterator it_end = items.end();
     for(; it != it_end; it++)
         if(typeid(**it) == typeid(Brick))
-            return false;
-    return true;
+            bricks.append((Brick*)*it);
+    return bricks;
+}
+
+bool Level::solved() {
+    return bricks().empty();
 }
 
 void Level::clean() {
+    delete _mode;
     _finished = true;
     _scene->clear();
 }
@@ -111,6 +123,7 @@ double Level::scaled(double x) {
 void Level::repeat_level() {
     load_scene();
 }
+
 void Level::next_level() {
     _level++;
     if(_level < LEVELS_NO)
@@ -171,18 +184,70 @@ void Level::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_S:
         _plate->resize_height(-scaled(default_plate_resize_height));
         break;
+
+    case Qt::Key_X:
+        change_mode(Winter);
+        break;
+    case Qt::Key_C:
+        change_mode(Samurai);
+        break;
+    case Qt::Key_V:
+        change_mode(Default);
+        break;
+    }
+}
+
+ModeName Level::mode_name() {
+    if(!_mode)
+        return Default;
+    if (typeid(*_mode) == typeid(WinterMode))
+        return Winter;
+    if (typeid(*_mode) == typeid(SamuraiMode))
+        return Samurai;
+    return Default;
+}
+
+void Level::change_mode(ModeName mode_name) {
+    //if(_mode)
+        delete _mode;
+    switch (mode_name) {
+    case Winter:
+        _mode = new WinterMode();
+        break;
+    case Samurai:
+        _mode = new SamuraiMode();
+        break;
+    case Default:
+    default:
+        _mode = NULL;
+        break;
     }
 }
 
 const char* Level::plate_pic_address = ":/images/plate.png";
 const char* Level::bullet_pic_address = ":/images/bullet.png";
-const char* Level::ball_pic_address = ":/images/plate.png";
 const char* Level::brick_pic_address = ":/images/brick.png";
+const char* Level::package_pic_address = ":/images/package.png";
 
-const double Level::default_ball_radius = 10;
-const double Level::default_ball_speed = 5;
+const char* Level::catface_pic_address = ":/images/catface.png";
+const char* Level::catface_up_pic_address = ":/images/catface_up.png";
+const char* Level::catface_down_pic_address = ":/images/catface_down.png";
+const char* Level::catface_left_pic_address = ":/images/catface_left.png";
+const char* Level::catface_blink_pic_address = ":/images/catface_blink.png";
+const char* Level::catface_right_pic_address = ":/images/catface_right.png";
+const char* Level::catface_samurai_pic_address = ":/images/catface_samurai.png";
+const char* Level::catface_samurai_left_pic_address = ":/images/catface_samurai_left.png";
+const char* Level::catface_samurai_right_pic_address = ":/images/catface_samurai_right.png";
+
+const char* Level::snowflake_pic_address = ":/images/snowflake.png";
+const char* Level::flower_pic_address = ":/images/flower.png";
+const char* Level::winter_text_pic_address = ":/images/winter_text.png";
+const char* Level::samurai_text_pic_address = ":/images/samurai_text.png";
+
+const double Level::default_ball_radius = 25;
+const double Level::default_ball_speed = 2.5;
 const double Level::default_ball_angle = 1.2;
-const double Level::default_ball_timer_interval = 13;
+const double Level::default_ball_timer_interval = 7;
 const double Level::default_bullet_radius = 7.5;
 const double Level::default_bullet_speed = 10;
 const double Level::default_bullet_timer_interval = 25;
@@ -192,6 +257,15 @@ const double Level::default_plate_radius = 200;
 const double Level::default_plate_move = 20;
 const double Level::default_plate_resize_height = 10;
 const double Level::default_plate_resize_width = 20;
+
+const double Level::default_package_length = 50;
+
+const double Level::default_fallingitem_timer_interval = 25;
+const double Level::default_fallingitem_length = 15;
+const double Level::default_fallingitem_speed = 8;
+
+const double Level::default_message_width = 400;
+const double Level::default_message_height = 200;
 
 const double Level::min_ball_timer_interval = 7;
 const double Level::max_plate_excess = 60;

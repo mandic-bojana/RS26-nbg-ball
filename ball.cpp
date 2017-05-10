@@ -4,6 +4,7 @@
 #include <vector>
 #include <QDebug>
 #include <typeinfo>
+#include <QTransform>
 
 using namespace std;
 
@@ -16,12 +17,30 @@ Ball::Ball(QGraphicsItem *parent)
     speed = level->scaled(level->default_ball_speed);
     active = false;
 
-    setPixmap(QPixmap(level->ball_pic_address).scaled(2*_r, 2*_r));
+    setPixmap(QPixmap(level->catface_pic_address).scaled(2*_r, 2*_r));
     set_to_plate();
 
     interval = level->default_ball_timer_interval;
     _timer = new QTimer();
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(move()));
+
+    _eyes_timer=new QTimer();
+    _eyes_timer->start(2000);
+    QObject::connect(_eyes_timer, SIGNAL(timeout()), this, SLOT(move_eyes()));
+
+    catface_samurai_images.reserve(3);
+    catface_samurai_images.push_back(QPixmap(level->catface_samurai_left_pic_address).scaled(2*_r, 2*_r));
+    catface_samurai_images.push_back(QPixmap(level->catface_samurai_pic_address).scaled(2*_r, 2*_r));
+    catface_samurai_images.push_back(QPixmap(level->catface_samurai_right_pic_address).scaled(2*_r, 2*_r));
+
+    catface_samurai_images.reserve(5);
+    catface_images.push_back(QPixmap(level->catface_pic_address).scaled(2*_r, 2*_r));
+    catface_images.push_back(QPixmap(level->catface_left_pic_address).scaled(2*_r, 2*_r));
+    catface_images.push_back(QPixmap(level->catface_right_pic_address).scaled(2*_r, 2*_r));
+    catface_images.push_back(QPixmap(level->catface_up_pic_address).scaled(2*_r, 2*_r));
+    catface_images.push_back(QPixmap(level->catface_down_pic_address).scaled(2*_r, 2*_r));
+
+    catface_blink_image = QPixmap(level->catface_blink_pic_address).scaled(2*_r, 2*_r);
 }
 
 Ball::~Ball() {
@@ -31,6 +50,11 @@ Ball::~Ball() {
 
 void Ball::set_to_plate() {
     setPos(level->plate()->top() - QPointF(_r, 2*_r));
+}
+
+void Ball::blink() {
+    level->ball()->setPixmap(catface_blink_image);
+    level->ball()->_eyes_timer->setInterval(250);
 }
 
 double d2(QPointF A, QPointF B) {
@@ -59,6 +83,12 @@ void Ball::activate() {
 void Ball::move() {
     setPos(pos().x() + speed * cos(angle), pos().y() - speed * sin(angle));
 
+    QTransform matrix;
+    matrix.translate(_r, _r);
+    matrix.rotate(0.7);
+    matrix.translate(-_r, -_r);
+    setTransform(matrix, true);
+
     if(pos().y() + r() >= scene()->height()) {
         level->clean();
         level->repeat_level();
@@ -73,14 +103,18 @@ void Ball::move() {
     if(d(level->plate()->center(), C()) <= level->plate()->r() + r() && goes_to(level->plate()->center()))
         bounce_point(level->plate()->center());
 
-    QList<QGraphicsItem*> colliding_items = collidingItems();
-    QList<QGraphicsItem*>::iterator it = colliding_items.begin();
-    QList<QGraphicsItem*>::iterator it_end = colliding_items.end();
+    QList<Brick*> bricks = level->bricks();
+    QList<Brick*>::iterator it = bricks.begin();
+    QList<Brick*>::iterator it_end = bricks.end();
     for(;it != it_end; it++) {
-        if(typeid(**it) == typeid(Brick)) {
-            Brick* brick = (Brick*)*it;
-            if(bounce_brick(brick))
+        Brick* brick = *it;
+        if(collidesWithItem(brick)) {
+            if(level->mode_name() == Samurai)
                 brick->hit();
+            else if(bounce_brick(brick)) {
+                brick->hit();
+                blink();
+            }
         }
     }
 
@@ -176,4 +210,13 @@ double Ball::y() {
 
 double Ball::r() {
     return _r;
+}
+
+void Ball::move_eyes() {
+    _eyes_timer->setInterval(1600);
+
+    if(level->mode_name() == Samurai)
+        setPixmap(catface_samurai_images[qrand()%3]);
+    else
+        setPixmap(catface_images[qrand()%5]);
 }

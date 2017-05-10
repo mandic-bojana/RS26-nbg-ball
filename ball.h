@@ -41,8 +41,11 @@ public:
     void activate();
     void set_to_plate();
 
+    void blink();
+
 public slots:
-    void move();
+    void move();    
+    void move_eyes();
 
 private:
     double interval;
@@ -51,6 +54,10 @@ private:
     double speed;
     bool active;
     QTimer *_timer;
+    QTimer *_eyes_timer;
+    QVector<QPixmap> catface_images;
+    QVector<QPixmap> catface_samurai_images;
+    QPixmap catface_blink_image;
 };
 
 #endif // BALL_H
