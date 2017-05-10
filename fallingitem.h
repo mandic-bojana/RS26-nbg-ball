@@ -16,7 +16,7 @@ public:
     void destroy();
 
 public slots:
-    void move();
+    virtual void move();
 
 private:
     int _side;

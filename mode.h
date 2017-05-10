@@ -37,4 +37,11 @@ public:
     SamuraiMode();
 };
 
+class FireMode : public Mode
+{
+    Q_OBJECT
+public:
+    FireMode();
+};
+
 #endif

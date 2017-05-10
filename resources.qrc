@@ -28,5 +28,10 @@
         <file>images/snowflake.png</file>
         <file>images/winter_text.png</file>
         <file>images/package.png</file>
+        <file>images/plate_decrease_height.png</file>
+        <file>images/plate_decrease_length.png</file>
+        <file>images/plate_increase_height.png</file>
+        <file>images/plate_increase_length.png</file>
+        <file>images/fire_text.png</file>
     </qresource>
 </RCC>

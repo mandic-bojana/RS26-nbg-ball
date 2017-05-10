@@ -14,7 +14,7 @@
 
 using namespace std;
 
-enum ModeName {Default, Winter, Samurai};
+enum ModeName {Default, Winter, Samurai, Fire};
 
 class Level : public QGraphicsView
 {
@@ -56,6 +56,12 @@ public:
     static const char* flower_pic_address;
     static const char* winter_text_pic_address;
     static const char* samurai_text_pic_address;
+    static const char* fire_text_pic_address;
+
+    static const char* increase_plate_length_pic_address;
+    static const char* decrease_plate_length_pic_address;
+    static const char* increase_plate_height_pic_address;
+    static const char* decrease_plate_height_pic_address;
 
     static const double default_ball_radius;
     static const double default_ball_speed;
@@ -68,7 +74,7 @@ public:
     static const double default_plate_radius;
     static const double default_plate_move;
     static const double default_plate_resize_height;
-    static const double default_plate_resize_width;
+    static const double default_plate_resize_length;
 
     static const double default_package_length;
 

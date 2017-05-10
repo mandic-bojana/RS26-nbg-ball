@@ -24,6 +24,8 @@ public:
     void create_ice();
     void freeze(double ice_opacity_increase = 0.02);
 
+    void randomize_package(double x, double y);
+
 private:
     double _width;
     double _height;

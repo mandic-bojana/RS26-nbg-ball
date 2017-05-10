@@ -28,6 +28,9 @@ void Mode::stop_initializing_effect() {
 SamuraiMode::SamuraiMode()
     : Mode(level->samurai_text_pic_address, level->flower_pic_address) { }
 
+FireMode::FireMode()
+    : Mode(level->fire_text_pic_address, level->bullet_pic_address) { }
+
 WinterMode::WinterMode()
     : Mode(level->winter_text_pic_address, level->snowflake_pic_address) {
 

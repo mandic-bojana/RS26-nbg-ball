@@ -40,7 +40,7 @@ Level::Level(QWidget *parent, int level) {
 
 void Level::load_scene() {
     _finished = false;
-    _mode = NULL;
+    _mode = nullptr;
 
     _scene = new QGraphicsScene();
     setScene(_scene);
@@ -148,7 +148,7 @@ void Level::mousePressEvent(QMouseEvent *event) {
         next_level();
     else if(!_ball->is_active())
         _ball->activate();
-    else {
+    else if(mode_name() == Fire) {
         Bullet* bullet=new Bullet();
         _scene->addItem(bullet);
     }
@@ -157,6 +157,7 @@ void Level::mousePressEvent(QMouseEvent *event) {
 void Level::keyPressEvent(QKeyEvent *event) {
     if(event->key() == Qt::Key_Escape)
         parentWidget()->close();
+    /*
     else if(_finished)
         return;
     else switch(event->key()) {
@@ -173,10 +174,10 @@ void Level::keyPressEvent(QKeyEvent *event) {
         break;
     }
     case Qt::Key_A:
-        _plate->resize_width(-scaled(default_plate_resize_width));
+        _plate->resize_length(-scaled(default_plate_resize_length));
         break;
     case Qt::Key_D:
-        _plate->resize_width(scaled(default_plate_resize_width));
+        _plate->resize_length(scaled(default_plate_resize_length));
         break;
     case Qt::Key_W:
         _plate->resize_height(scaled(default_plate_resize_height));
@@ -195,6 +196,7 @@ void Level::keyPressEvent(QKeyEvent *event) {
         change_mode(Default);
         break;
     }
+    */
 }
 
 ModeName Level::mode_name() {
@@ -202,24 +204,28 @@ ModeName Level::mode_name() {
         return Default;
     if (typeid(*_mode) == typeid(WinterMode))
         return Winter;
+    if (typeid(*_mode) == typeid(FireMode))
+        return Fire;
     if (typeid(*_mode) == typeid(SamuraiMode))
         return Samurai;
     return Default;
 }
 
 void Level::change_mode(ModeName mode_name) {
-    //if(_mode)
-        delete _mode;
+    delete _mode;
     switch (mode_name) {
     case Winter:
         _mode = new WinterMode();
+        break;
+    case Fire:
+        _mode = new FireMode();
         break;
     case Samurai:
         _mode = new SamuraiMode();
         break;
     case Default:
     default:
-        _mode = NULL;
+        _mode = nullptr;
         break;
     }
 }
@@ -243,8 +249,14 @@ const char* Level::snowflake_pic_address = ":/images/snowflake.png";
 const char* Level::flower_pic_address = ":/images/flower.png";
 const char* Level::winter_text_pic_address = ":/images/winter_text.png";
 const char* Level::samurai_text_pic_address = ":/images/samurai_text.png";
+const char* Level::fire_text_pic_address = ":/images/fire_text.png";
 
-const double Level::default_ball_radius = 25;
+const char* Level::increase_plate_length_pic_address = ":/images/plate_increase_length.png";
+const char* Level::decrease_plate_length_pic_address = ":/images/plate_decrease_length.png";
+const char* Level::increase_plate_height_pic_address = ":/images/plate_increase_height.png";
+const char* Level::decrease_plate_height_pic_address = ":/images/plate_decrease_height.png";
+
+const double Level::default_ball_radius = 20;
 const double Level::default_ball_speed = 2.5;
 const double Level::default_ball_angle = 1.2;
 const double Level::default_ball_timer_interval = 7;
@@ -252,13 +264,13 @@ const double Level::default_bullet_radius = 7.5;
 const double Level::default_bullet_speed = 10;
 const double Level::default_bullet_timer_interval = 25;
 const double Level::default_plate_excess = 40;
-const double Level::default_plate_radius = 200;
+const double Level::default_plate_radius = 150;
 
 const double Level::default_plate_move = 20;
 const double Level::default_plate_resize_height = 10;
-const double Level::default_plate_resize_width = 20;
+const double Level::default_plate_resize_length = 20;
 
-const double Level::default_package_length = 50;
+const double Level::default_package_length = 45;
 
 const double Level::default_fallingitem_timer_interval = 25;
 const double Level::default_fallingitem_length = 15;

@@ -19,7 +19,7 @@ public:
     double r();
     double excess();
     void resize_height(double d);
-    void resize_width(double d);
+    void resize_length(double d);
     void move(double d);
     QPointF left();
     QPointF right();

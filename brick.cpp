@@ -70,10 +70,29 @@ void Brick::hit() {
         level->scene()->removeItem(_ice);
         delete _ice;
     }
-
     else {
         scene()->removeItem(this);
         delete this;
-        new Package(pos().x(), pos().y());
+        randomize_package(pos().x(), pos().y());
     }
+}
+
+void Brick::randomize_package(double x, double y) {
+    int rand = (level->mode_name() == Samurai) ? qrand() % 600 : qrand() % 200;
+    if(rand < 2)
+        new IncreasePlateLength(x, y);
+    else if(rand < 4)
+        new DecreasePlateLength(x, y);
+    else if(rand < 6)
+        new IncreasePlateWidth(x, y);
+    else if(rand < 8)
+        new DecreasePlateWidth(x, y);
+    else if(rand < 10)
+        new SamuraiModeActivate(x, y);
+    else if(rand < 12)
+        new WinterModeActivate(x, y);
+    else if(rand < 14)
+        new FireModeActivate(x, y);
+    else if(rand < 16)
+        new DefaultModeActivate(x, y);
 }
