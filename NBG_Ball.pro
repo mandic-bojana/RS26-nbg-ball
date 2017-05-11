@@ -38,6 +38,10 @@ HEADERS  += \
 FORMS    +=
 
 RESOURCES += \
-    resources.qrc
+    levels.qrc \
+    catfaces.qrc \
+    modes.qrc \
+    packages.qrc \
+    elements.qrc
 
 DISTFILES +=

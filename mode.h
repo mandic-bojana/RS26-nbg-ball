@@ -52,4 +52,4 @@ public:
     SpeedMode();
 };
 
-#endif
+#endif // MODE_H

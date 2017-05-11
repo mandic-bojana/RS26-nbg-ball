@@ -31,18 +31,25 @@ public:
 
     void load_scene();
     void load_bricks();
+
     bool solved();
+    void clean();
     void next_level();
     void repeat_level();
-    void clean();
+
+    void unfreeze();
 
     double scaled(double x);
 
     static const char* plate_pic_address;
     static const char* package_pic_address;
     static const char* fire_plate_pic_address;
-    static const char* brick_pic_address;
     static const char* bullet_pic_address;
+
+    static const char* yellow_brick_pic_address;
+    static const char* red_brick_pic_address;
+    static const char* green_brick_pic_address;
+    static const char* blue_brick_pic_address;
 
     static const char* catface_pic_address;
     static const char* catface_up_pic_address;
@@ -77,6 +84,8 @@ public:
     static const double default_ball_speed;
     static const double default_ball_angle;
     static const double default_ball_timer_interval;
+    static const double default_speed_ball_radius;
+    static const double default_speed_ball_speed;
     static const double default_bullet_radius;
     static const double default_bullet_speed;
     static const double default_bullet_timer_interval;

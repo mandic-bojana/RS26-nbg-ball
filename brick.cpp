@@ -7,13 +7,14 @@
 
 extern Level *level;
 
-Brick::Brick(double w, double h, double x, double y, QGraphicsItem *parent)
+Brick::Brick(QString pic_addr, double w, double h, double x, double y, QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
     _width = w;
     _height = h;
-    _frozen = false;
-    setPixmap(QPixmap(level->brick_pic_address).scaled(w, h));
+    setPixmap(QPixmap(pic_addr).scaled(w, h));
     setPos(x, y);
+
+    _ice = NULL;
 }
 
 double Brick::width() {
@@ -42,13 +43,12 @@ QPointF Brick::bottom_right() {
 }
 
 void Brick::create_ice() {
-    if(_frozen)
+    if(_ice)
         return;
 
-    _frozen = true;
     _ice = new QGraphicsPixmapItem;
 
-    _ice->setPixmap(QPixmap(level->brick_pic_address).scaled(_width+2, _height+3));
+    _ice->setPixmap(QPixmap(level->yellow_brick_pic_address).scaled(_width+2, _height+3));
     _ice->setPos(x()-1, y());
     QGraphicsColorizeEffect *effect=new QGraphicsColorizeEffect;
     effect->setColor(QColor(20, 130, 150));
@@ -58,18 +58,22 @@ void Brick::create_ice() {
 }
 
 void Brick::freeze(double ice_opacity_increase) {
-    if(!_frozen || _ice->opacity() + ice_opacity_increase >= 0.9)
+    if(!_ice || _ice->opacity() + ice_opacity_increase >= 0.9)
         return;
     _ice->setOpacity(_ice->opacity() + ice_opacity_increase);
 }
 
-void Brick::hit() {
-
-    if(_frozen) {
-        _frozen = false;
+void Brick::unfreeze() {
+    if(_ice) {
         level->scene()->removeItem(_ice);
         delete _ice;
+        _ice = NULL;
     }
+}
+
+void Brick::hit() {
+    if(_ice)
+        unfreeze();
     else {
         randomize_package(pos().x(), pos().y());
         scene()->removeItem(this);
@@ -95,4 +99,18 @@ void Brick::randomize_package(double x, double y) {
         new FireModeActivate(x, y);
     else if(rand < 16)
         new SpeedModeActivate(x, y);
+    else if(rand < 18)
+        new DefaultModeActivate(x, y);
 }
+
+YellowBrick::YellowBrick(double w, double h, double x, double y, QGraphicsItem *parent)
+    : Brick(level->yellow_brick_pic_address, w, h, x, y, parent) { }
+
+RedBrick::RedBrick(double w, double h, double x, double y, QGraphicsItem *parent)
+    : Brick(level->red_brick_pic_address, w, h, x, y, parent) { }
+
+GreenBrick::GreenBrick(double w, double h, double x, double y, QGraphicsItem *parent)
+    : Brick(level->green_brick_pic_address, w, h, x, y, parent) { }
+
+BlueBrick::BlueBrick(double w, double h, double x, double y, QGraphicsItem *parent)
+    : Brick(level->blue_brick_pic_address, w, h, x, y, parent) { }

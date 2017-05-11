@@ -51,7 +51,7 @@ void Level::load_scene() {
     _plate = new Plate();
     _plate->setFlag(QGraphicsItem::ItemIsFocusable);
     _scene->addItem(_plate);
-    _plate->setZValue(1);
+    _plate->setZValue(2);
 
     _ball = new Ball();
     _scene->addItem(_ball);
@@ -74,10 +74,23 @@ void Level::load_bricks() {
     for(int i = 0; i < bricks_column; i++) {
         file.readLine(line, MAXLEN);
         for(int j = 0; j < bricks_row && line[j] != '\0'; j++) {
-            if (line[j] == 'r') {
-                Brick* brick = new Brick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
-                _scene->addItem(brick);
+            Brick* brick = NULL;
+            switch (line[j]) {
+            case 'y':
+                brick = new YellowBrick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
+                break;
+            case 'r':
+                brick = new RedBrick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
+                break;
+            case 'g':
+                brick = new GreenBrick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
+                break;
+            case 'b':
+                brick = new BlueBrick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
+                break;
             }
+            if(brick)
+                _scene->addItem(brick);
         }
     }
     file.close();
@@ -101,9 +114,20 @@ QList<Brick*> Level::bricks() {
     QList<QGraphicsItem*>::iterator it = items.begin();
     QList<QGraphicsItem*>::iterator it_end = items.end();
     for(; it != it_end; it++)
-        if(typeid(**it) == typeid(Brick))
+        if(typeid(**it) == typeid(YellowBrick)
+                || typeid(**it) == typeid(RedBrick)
+                || typeid(**it) == typeid(GreenBrick)
+                || typeid(**it) == typeid(BlueBrick)) //mora da moze lepse
             bricks.append((Brick*)*it);
     return bricks;
+}
+
+void Level::unfreeze() {
+    QList<Brick*> brcs = bricks();
+    QList<Brick*>::iterator it = brcs.begin();
+    QList<Brick*>::iterator it_end = brcs.end();
+    for(; it != it_end; it++)
+        (*it)->unfreeze();
 }
 
 bool Level::solved() {
@@ -154,8 +178,6 @@ void Level::mousePressEvent(QMouseEvent *event) {
     }
 }
 
-
-
 void Level::keyPressEvent(QKeyEvent *event) {
     if(event->key() == Qt::Key_Escape)
         parentWidget()->close();
@@ -188,23 +210,23 @@ void Level::keyPressEvent(QKeyEvent *event) {
         _plate->resize_height(-scaled(default_plate_resize_height));
         break;
 
+    case Qt::Key_Z:
+        change_mode(Fire);
+        break;
     case Qt::Key_X:
         change_mode(Winter);
         break;
     case Qt::Key_C:
         change_mode(Samurai);
         break;
-    case Qt::Key_B:
+    case Qt::Key_V:
         change_mode(Speed);
         break;
-    case Qt::Key_V:
+    case Qt::Key_B:
         change_mode(Default);
         break;
     }
-
 }
-
-
 
 ModeName Level::mode_name() {
     if(!_mode)
@@ -239,18 +261,21 @@ void Level::change_mode(ModeName mode_name) {
     case Default:
     default:
         _mode = nullptr;
+        unfreeze();
         break;
     }
+    _ball->move_eyes();
 }
-
-
 
 const char* Level::plate_pic_address = ":/images/plate.png";
 const char* Level::fire_plate_pic_address = ":/images/fire_plate.png";
 const char* Level::package_pic_address = ":/images/package.png";
 const char* Level::bullet_pic_address = ":images/bullet.png";
-const char* Level::brick_pic_address = ":/images/brick.png";
 
+const char* Level::yellow_brick_pic_address = ":/images/yellow_brick.png";
+const char* Level::red_brick_pic_address = ":/images/red_brick.png";
+const char* Level::green_brick_pic_address = ":/images/green_brick.png";
+const char* Level::blue_brick_pic_address = ":/images/blue_brick.png";
 
 const char* Level::catface_pic_address = ":/images/catface.png";
 const char* Level::catface_up_pic_address = ":/images/catface_up.png";
@@ -282,15 +307,17 @@ const char* Level::sushi_pic_address = ":/images/sushi.png";
 const char* Level::speed_candy_pic_address = ":/images/speed_candy.png";
 const char* Level::pepper_pic_address = ":/images/pepper.png";
 
-const double Level::default_ball_radius = 20;
-const double Level::default_ball_speed = 2.5;
-const double Level::default_ball_angle = 1.2;
 const double Level::default_ball_timer_interval = 7;
+const double Level::default_ball_angle = 1.2;
+const double Level::default_ball_radius = 20;
+const double Level::default_ball_speed = 3;
+const double Level::default_speed_ball_radius = 16;
+const double Level::default_speed_ball_speed = 4.2;
 const double Level::default_bullet_radius = 5.5;
 const double Level::default_bullet_speed = 10;
 const double Level::default_bullet_timer_interval = 25;
 const double Level::default_plate_excess = 40;
-const double Level::default_plate_radius = 150;
+const double Level::default_plate_radius = 90;
 
 const double Level::default_plate_move = 20;
 const double Level::default_plate_resize_height = 10;
@@ -309,4 +336,4 @@ const double Level::min_ball_timer_interval = 7;
 const double Level::max_plate_excess = 60;
 const double Level::max_plate_length = 400;
 const double Level::min_plate_excess = 20;
-const double Level::min_plate_length = 150;
+const double Level::min_plate_length = 80;

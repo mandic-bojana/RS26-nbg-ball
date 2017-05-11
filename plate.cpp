@@ -10,8 +10,20 @@ Plate::Plate(QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
     _excess = level->scaled(level->default_plate_excess);
     _r = level->scaled(level->default_plate_radius);
-    setPixmap(QPixmap(level->plate_pic_address).scaled(2*_r, 2*_r));
+
+    _pic = QPixmap(level->plate_pic_address);
+    _fire_pic = QPixmap(level->fire_plate_pic_address);
+
+    setPixmap(_pic.scaled(2*_r, 2*_r));
     setPos(level->width()/2 - _r, level->height() - _excess);
+}
+
+QPixmap Plate::image() {
+    return (level->mode_name() == Fire) ? _fire_pic : _pic;
+}
+
+void Plate::update_pixmap() {
+    setPixmap(image().scaled(2*_r, 2*_r));
 }
 
 void Plate::resize_length(double d) {
@@ -29,7 +41,7 @@ void Plate::resize_length(double d) {
     if(len <= level->scaled(level->max_plate_length) && len >= level->scaled(level->min_plate_length)) {
         setX(x() - R);
         _r = R;
-        setPixmap(QPixmap(level->plate_pic_address).scaled(2*R, 2*R));
+        update_pixmap();
     }
 
     if(!level->ball()->is_active())
@@ -52,7 +64,7 @@ void Plate::resize_height(double d) {
         setY(TP.y());
         setX(x() - R);
         _r = R;
-        setPixmap(QPixmap(level->plate_pic_address).scaled(2*R, 2*R));
+        update_pixmap();
     }
 
     if(!level->ball()->is_active())
@@ -65,6 +77,13 @@ void Plate::move(double d) {
 
     if(!level->ball()->is_active())
         level->ball()->set_to_plate();
+}
+
+void Plate::set_on_fire(bool fire) {
+    if(fire)
+        setPixmap(QPixmap(level->fire_plate_pic_address).scaled(2*_r, 2*_r));
+    else
+        setPixmap(QPixmap(level->plate_pic_address).scaled(2*_r, 2*_r));
 }
 
 QPointF Plate::left() {

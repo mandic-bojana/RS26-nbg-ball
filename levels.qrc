@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>levels/0.nbg</file>
+        <file>levels/0.png</file>
+        <file>levels/1.nbg</file>
+        <file>levels/1.png</file>
+        <file>levels/2.nbg</file>
+        <file>levels/2.png</file>
+        <file>levels/3.nbg</file>
+        <file>levels/3.png</file>
+        <file>levels/4.nbg</file>
+        <file>levels/4.png</file>
+    </qresource>
+</RCC>

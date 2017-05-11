@@ -2,6 +2,7 @@
 #define PACKAGE_H
 
 #include "fallingitem.h"
+#include <QDebug>
 
 class Package : public FallingItem
 {

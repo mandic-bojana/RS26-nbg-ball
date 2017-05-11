@@ -36,7 +36,6 @@ public:
     double x();
     double y();
     double r();
-
     void set_speed(double x);
 
     bool is_active();
@@ -45,6 +44,9 @@ public:
 
     void blink();
 
+    void reset();
+    void set_speed_mode();
+
 public slots:
     void move();    
     void move_eyes();
@@ -52,6 +54,7 @@ public slots:
 private:
     double interval;
     double _r;
+    double _speed_r;
     double angle;
     double speed;
     bool active;
