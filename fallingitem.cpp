@@ -7,8 +7,8 @@
 #include <cmath>
 #include <typeinfo>
 
-
 extern Level *level;
+
 FallingItem::FallingItem(const QString picture_address, double length, QGraphicsItem* parent)
     : QObject(), QGraphicsPixmapItem(parent), _length(length) {
 
@@ -19,7 +19,7 @@ FallingItem::FallingItem(const QString picture_address, double length, QGraphics
 
     level->scene()->addItem(this);
 
-    _side = qrand()%3-1;
+    _side = qrand()%3 - 1;
     QTimer* timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
     timer->start(level->default_fallingitem_timer_interval);
@@ -32,8 +32,8 @@ FallingItem::FallingItem(const QString picture_address, int x, int y, double len
 }
 
 void FallingItem::move() {
-    _angle += _side*0.03;
-    if(abs(_angle - M_PI/2) >= M_PI/6)
+    _angle += _side*0.08;
+    if(abs(_angle - M_PI/2) >= M_PI/4)
         _side *= -1;
     setPos(x() + _speed * cos(_angle), y() + _speed * sin(_angle));
 

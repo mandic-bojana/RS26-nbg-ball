@@ -14,7 +14,7 @@ Plate::Plate(QGraphicsItem *parent)
     setPos(level->width()/2 - _r, level->height() - _excess);
 }
 
-void Plate::resize_width(double d) {
+void Plate::resize_length(double d) {
     QPointF A = right();
     QPointF AP = A + QPointF(d, 0);
     QPointF T = top();
