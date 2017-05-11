@@ -5,6 +5,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include "package.h"
 
 class Brick : public QObject, public QGraphicsPixmapItem
 {
@@ -30,6 +31,7 @@ private:
     double _width;
     double _height;
     bool _frozen;
+    Package *_package;
     QGraphicsPixmapItem * _ice;
 };
 

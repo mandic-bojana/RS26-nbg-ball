@@ -16,6 +16,11 @@ Mode::Mode(const QString &message_pic_addr, const QString &falling_item_pic_addr
     QObject::connect(message->timer(), SIGNAL(destroyed(QObject*)), this, SLOT(stop_initializing_effect()));
 }
 
+void Mode::reset()
+{
+    level->ball()->set_speed(level->default_ball_speed);
+}
+
 void Mode::item_rain() {
     new FallingItem(falling_item_pic_addr, qrand() % int(level->scene()->width()), 0, level->scaled(level->default_fallingitem_length));
 }
@@ -40,6 +45,13 @@ WinterMode::WinterMode()
     for(; it != it_end; it++)
         (*it)->create_ice();
     QObject::connect(message->timer(), SIGNAL(timeout()), this, SLOT(freeze()));
+}
+
+SpeedMode::SpeedMode()
+    : Mode(level->speed_text_pic_address, level->speed_pic_address) {
+
+    level->ball()->set_speed(level->default_ball_speed + 1);
+
 }
 
 void WinterMode::freeze() {

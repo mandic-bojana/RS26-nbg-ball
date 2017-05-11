@@ -37,6 +37,8 @@ public:
     double y();
     double r();
 
+    void set_speed(double x);
+
     bool is_active();
     void activate();
     void set_to_plate();
@@ -58,6 +60,8 @@ private:
     QVector<QPixmap> catface_images;
     QVector<QPixmap> catface_samurai_images;
     QPixmap catface_blink_image;
+    QPixmap catface_speed_image;
+    QPixmap catface_speed_blink_image;
 };
 
 #endif // BALL_H

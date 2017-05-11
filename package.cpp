@@ -7,12 +7,15 @@ extern Level* level;
 Package::Package(const QString &pic_addr, double x, double y, QGraphicsItem *parent)
     : FallingItem(pic_addr, x, y, level->scaled(level->default_package_length), M_PI/2, parent) { }
 
+
 void Package::move() {
     if(collidesWithItem(level->plate())) {
         upgrade();
         destroy();
     }
-    FallingItem::move();
+
+    else
+        FallingItem::move();
 }
 
 IncreasePlateLength::IncreasePlateLength(double x, double y, QGraphicsItem *parent)
@@ -28,13 +31,16 @@ DecreasePlateWidth::DecreasePlateWidth(double x, double y, QGraphicsItem *parent
     : Package(level->decrease_plate_height_pic_address, x, y, parent) { }
 
 SamuraiModeActivate::SamuraiModeActivate(double x, double y, QGraphicsItem *parent)
-    : Package(level->samurai_text_pic_address, x, y, parent) { }
+    : Package(level->sushi_pic_address, x, y, parent) { }
 
 WinterModeActivate::WinterModeActivate(double x, double y, QGraphicsItem *parent)
-    : Package(level->winter_text_pic_address, x, y, parent) { }
+    : Package(level->ice_cream_pic_address, x, y, parent) { }
 
 FireModeActivate::FireModeActivate(double x, double y, QGraphicsItem *parent)
-    : Package(level->fire_text_pic_address, x, y, parent) { }
+    : Package(level->pepper_pic_address, x, y, parent) { }
+
+SpeedModeActivate::SpeedModeActivate(double x, double y, QGraphicsItem *parent)
+    : Package(level->speed_candy_pic_address, x, y, parent) { }
 
 DefaultModeActivate::DefaultModeActivate(double x, double y, QGraphicsItem *parent)
     : Package(level->package_pic_address, x, y, parent) { }
@@ -65,6 +71,10 @@ void WinterModeActivate::upgrade() {
 
 void FireModeActivate::upgrade() {
     level->change_mode(Fire);
+}
+
+void SpeedModeActivate::upgrade() {
+    level->change_mode(Speed);
 }
 
 void DefaultModeActivate::upgrade() {

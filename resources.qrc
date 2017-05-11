@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>images/brick.png</file>
-        <file>images/bullet.png</file>
         <file>images/plate.png</file>
         <file>levels/0.nbg</file>
         <file>levels/0.png</file>
@@ -33,5 +32,18 @@
         <file>images/plate_increase_height.png</file>
         <file>images/plate_increase_length.png</file>
         <file>images/fire_text.png</file>
+        <file>images/catface_speed.png</file>
+        <file>images/catface_speed_blink.png</file>
+        <file>images/ice_cream.png</file>
+        <file>images/pepper.png</file>
+        <file>images/speed.png</file>
+        <file>images/speed_candy.png</file>
+        <file>images/speed_text.png</file>
+        <file>images/sushi.png</file>
+        <file>images/blue_brick.png</file>
+        <file>images/green_brick.png</file>
+        <file>images/red_brick.png</file>
+        <file>images/bullet.png</file>
+        <file>images/fire_plate.png</file>
     </qresource>
 </RCC>

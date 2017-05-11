@@ -71,9 +71,9 @@ void Brick::hit() {
         delete _ice;
     }
     else {
+        randomize_package(pos().x(), pos().y());
         scene()->removeItem(this);
         delete this;
-        randomize_package(pos().x(), pos().y());
     }
 }
 
@@ -94,5 +94,5 @@ void Brick::randomize_package(double x, double y) {
     else if(rand < 14)
         new FireModeActivate(x, y);
     else if(rand < 16)
-        new DefaultModeActivate(x, y);
+        new SpeedModeActivate(x, y);
 }

@@ -41,6 +41,8 @@ Ball::Ball(QGraphicsItem *parent)
     catface_images.push_back(QPixmap(level->catface_down_pic_address).scaled(2*_r, 2*_r));
 
     catface_blink_image = QPixmap(level->catface_blink_pic_address).scaled(2*_r, 2*_r);
+    catface_speed_image = QPixmap(level->catface_speed_pic_address).scaled(2*_r, 2*_r);
+    catface_speed_blink_image = QPixmap(level->catface_speed_blink_pic_address).scaled(2*_r, 2*_r);
 }
 
 Ball::~Ball() {
@@ -53,7 +55,10 @@ void Ball::set_to_plate() {
 }
 
 void Ball::blink() {
-    level->ball()->setPixmap(catface_blink_image);
+    if(level->mode_name() == Speed)
+        level->ball()->setPixmap(catface_speed_blink_image);
+    else
+        level->ball()->setPixmap(catface_blink_image);
     level->ball()->_eyes_timer->setInterval(250);
 }
 
@@ -212,10 +217,16 @@ double Ball::r() {
     return _r;
 }
 
+void Ball::set_speed(double x)
+{
+    speed = x;
+}
+
 void Ball::move_eyes() {
     _eyes_timer->setInterval(1600);
-
-    if(level->mode_name() == Samurai)
+    if(level->mode_name() == Speed)
+        setPixmap(catface_speed_image);
+    else if(level->mode_name() == Samurai)
         setPixmap(catface_samurai_images[qrand()%3]);
     else
         setPixmap(catface_images[qrand()%5]);
