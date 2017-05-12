@@ -11,7 +11,6 @@
 #include <iostream>
 #include "mode.h"
 
-
 #define MAXLEN 100
 #define LEVELS_NO 5
 
@@ -114,10 +113,7 @@ QList<Brick*> Level::bricks() {
     QList<QGraphicsItem*>::iterator it = items.begin();
     QList<QGraphicsItem*>::iterator it_end = items.end();
     for(; it != it_end; it++)
-        if(typeid(**it) == typeid(YellowBrick)
-                || typeid(**it) == typeid(RedBrick)
-                || typeid(**it) == typeid(GreenBrick)
-                || typeid(**it) == typeid(BlueBrick)) //mora da moze lepse
+        if(dynamic_cast<Brick*>(*it))
             bricks.append((Brick*)*it);
     return bricks;
 }
@@ -311,7 +307,7 @@ const double Level::default_ball_timer_interval = 7;
 const double Level::default_ball_angle = 1.2;
 const double Level::default_ball_radius = 20;
 const double Level::default_ball_speed = 3;
-const double Level::default_speed_ball_radius = 16;
+const double Level::default_speed_ball_radius = 8;
 const double Level::default_speed_ball_speed = 4.2;
 const double Level::default_bullet_radius = 5.5;
 const double Level::default_bullet_speed = 10;
@@ -332,7 +328,7 @@ const double Level::default_fallingitem_speed = 8;
 const double Level::default_message_width = 400;
 const double Level::default_message_height = 200;
 
-const double Level::min_ball_timer_interval = 7;
+const double Level::min_ball_timer_interval = 5;
 const double Level::max_plate_excess = 60;
 const double Level::max_plate_length = 400;
 const double Level::min_plate_excess = 20;

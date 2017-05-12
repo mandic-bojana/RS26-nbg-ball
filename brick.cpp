@@ -14,7 +14,7 @@ Brick::Brick(QString pic_addr, double w, double h, double x, double y, QGraphics
     setPixmap(QPixmap(pic_addr).scaled(w, h));
     setPos(x, y);
 
-    _ice = NULL;
+    _ice = nullptr;
 }
 
 double Brick::width() {
@@ -67,7 +67,7 @@ void Brick::unfreeze() {
     if(_ice) {
         level->scene()->removeItem(_ice);
         delete _ice;
-        _ice = NULL;
+        _ice = nullptr;
     }
 }
 

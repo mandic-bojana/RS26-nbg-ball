@@ -15,14 +15,15 @@ Ball::Ball(QGraphicsItem *parent)
     _r = level->scaled(level->default_ball_radius);
     _speed_r = level->scaled(level->default_speed_ball_radius);
 
-    angle = level->default_ball_angle;
-    speed = level->scaled(level->default_ball_speed);
-    active = false;
+    _angle = level->default_ball_angle;
+    _speed = level->scaled(level->default_ball_speed);
+    _speed_speed = level->scaled(level->default_speed_ball_speed);
+    _active = false;
 
     setPixmap(QPixmap(level->catface_pic_address).scaled(2*_r, 2*_r));
     set_to_plate();
 
-    interval = level->default_ball_timer_interval;
+    _interval = level->default_ball_timer_interval;
     _timer = new QTimer();
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(move()));
 
@@ -58,12 +59,10 @@ void Ball::set_to_plate() {
 }
 
 void Ball::reset() {
-    set_speed(level->scaled(level->default_ball_speed));
     setPos(pos().x() + _speed_r - _r, pos().y() + _speed_r - _r);
 }
 
 void Ball::set_speed_mode() {
-    set_speed(level->scaled(level->default_speed_ball_speed));
     setPos(pos().x() - _speed_r + _r, pos().y() - _speed_r + _r);
 }
 
@@ -91,16 +90,16 @@ double Ball::angle_to(QPointF P) {
 }
 
 bool Ball::is_active() {
-    return active;
+    return _active;
 }
 
 void Ball::activate() {
-    active = true;
-    _timer->start(interval);
+    _active = true;
+    _timer->start(_interval);
 }
 
 void Ball::move() {
-    setPos(pos().x() + speed * cos(angle), pos().y() - speed * sin(angle));
+    setPos(pos().x() + speed() * cos(_angle), pos().y() - speed() * sin(_angle));
 
     QTransform matrix;
     matrix.translate(r(), r());
@@ -137,8 +136,8 @@ void Ball::move() {
     }
 
     if(_timer->interval() > level->min_ball_timer_interval) {
-        interval -= 0.01;
-        _timer->setInterval(interval);
+        _interval -= 0.0001;
+        _timer->setInterval(_interval);
     }
 
     if(level->solved())
@@ -175,11 +174,11 @@ void Ball::bounce_point(QPointF P) {
 }
 
 void Ball::bounce(double alpha) {
-    angle = 2 * alpha - angle;
-    if(angle < 0)
-        angle += 2 * M_PI;
-    if(angle > 2 * M_PI)
-        angle -= 2 * M_PI;
+    _angle = 2 * alpha - _angle;
+    if(_angle < 0)
+        _angle += 2 * M_PI;
+    if(_angle > 2 * M_PI)
+        _angle -= 2 * M_PI;
 }
 
 void Ball::bounce_vertical() {
@@ -195,11 +194,11 @@ bool Ball::goes_to(double px, double py) {
 }
 
 bool Ball::goes_to(QPointF P) {
-    return cos(angle_to(P) - angle) > 0;
+    return cos(angle_to(P) - _angle) > 0;
 }
 
 bool Ball::goes_up() {
-    return sin(angle) > 0;
+    return sin(_angle) > 0;
 }
 
 bool Ball::goes_down() {
@@ -207,7 +206,7 @@ bool Ball::goes_down() {
 }
 
 bool Ball::goes_left() {
-    return cos(angle) < 0;
+    return cos(_angle) < 0;
 }
 
 bool Ball::goes_right() {
@@ -227,11 +226,11 @@ double Ball::y() {
 }
 
 double Ball::r() {
-    return (level->mode_name() == Speed) ? _speed_r : _r;
+    return ((level->mode_name() == Speed) ? _speed_r : _r);
 }
 
-void Ball::set_speed(double x) {
-    speed = x;
+double Ball::speed() {
+    return ((level->mode_name() == Speed) ? _speed_speed : _speed);
 }
 
 void Ball::move_eyes() {

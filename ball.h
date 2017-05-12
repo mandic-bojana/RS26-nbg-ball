@@ -36,7 +36,7 @@ public:
     double x();
     double y();
     double r();
-    void set_speed(double x);
+    double speed();
 
     bool is_active();
     void activate();
@@ -52,12 +52,13 @@ public slots:
     void move_eyes();
 
 private:
-    double interval;
+    double _interval;
     double _r;
     double _speed_r;
-    double angle;
-    double speed;
-    bool active;
+    double _angle;
+    double _speed;
+    double _speed_speed;
+    bool _active;
     QTimer *_timer;
     QTimer *_eyes_timer;
     QVector<QPixmap> catface_images;
