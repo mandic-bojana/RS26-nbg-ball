@@ -9,6 +9,7 @@ class Mode: public QObject
     Q_OBJECT
 public:
     Mode(const QString &message_pic_addr, const QString& falling_item_pic_addr);
+    void reset();
 
 public slots:
     void item_rain();
@@ -44,4 +45,11 @@ public:
     FireMode();
 };
 
-#endif
+class SpeedMode : public Mode
+{
+    Q_OBJECT
+public:
+    SpeedMode();
+};
+
+#endif // MODE_H

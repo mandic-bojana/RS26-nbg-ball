@@ -13,14 +13,17 @@ extern Level *level;
 Ball::Ball(QGraphicsItem *parent)
     : QObject(), QGraphicsPixmapItem(parent) {
     _r = level->scaled(level->default_ball_radius);
-    angle = level->default_ball_angle;
-    speed = level->scaled(level->default_ball_speed);
-    active = false;
+    _speed_r = level->scaled(level->default_speed_ball_radius);
+
+    _angle = level->default_ball_angle;
+    _speed = level->scaled(level->default_ball_speed);
+    _speed_speed = level->scaled(level->default_speed_ball_speed);
+    _active = false;
 
     setPixmap(QPixmap(level->catface_pic_address).scaled(2*_r, 2*_r));
     set_to_plate();
 
-    interval = level->default_ball_timer_interval;
+    _interval = level->default_ball_timer_interval;
     _timer = new QTimer();
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(move()));
 
@@ -41,6 +44,9 @@ Ball::Ball(QGraphicsItem *parent)
     catface_images.push_back(QPixmap(level->catface_down_pic_address).scaled(2*_r, 2*_r));
 
     catface_blink_image = QPixmap(level->catface_blink_pic_address).scaled(2*_r, 2*_r);
+
+    catface_speed_image = QPixmap(level->catface_speed_pic_address).scaled(2*_speed_r, 2*_speed_r);
+    catface_speed_blink_image = QPixmap(level->catface_speed_blink_pic_address).scaled(2*_speed_r, 2*_speed_r);
 }
 
 Ball::~Ball() {
@@ -49,12 +55,24 @@ Ball::~Ball() {
 }
 
 void Ball::set_to_plate() {
-    setPos(level->plate()->top() - QPointF(_r, 2*_r));
+    setPos(level->plate()->top() - QPointF(r(), 2*r()));
+}
+
+void Ball::reset() {
+    setPos(pos().x() + _speed_r - _r, pos().y() + _speed_r - _r);
+}
+
+void Ball::set_speed_mode() {
+    setPos(pos().x() - _speed_r + _r, pos().y() - _speed_r + _r);
 }
 
 void Ball::blink() {
-    level->ball()->setPixmap(catface_blink_image);
-    level->ball()->_eyes_timer->setInterval(250);
+    if(level->mode_name() == Speed)
+        level->ball()->setPixmap(catface_speed_blink_image);
+    else if(level->mode_name() != Samurai)
+        level->ball()->setPixmap(catface_blink_image);
+    if(level->mode_name() != Samurai)
+        level->ball()->_eyes_timer->setInterval(250);
 }
 
 double d2(QPointF A, QPointF B) {
@@ -72,21 +90,21 @@ double Ball::angle_to(QPointF P) {
 }
 
 bool Ball::is_active() {
-    return active;
+    return _active;
 }
 
 void Ball::activate() {
-    active = true;
-    _timer->start(interval);
+    _active = true;
+    _timer->start(_interval);
 }
 
 void Ball::move() {
-    setPos(pos().x() + speed * cos(angle), pos().y() - speed * sin(angle));
+    setPos(pos().x() + speed() * cos(_angle), pos().y() - speed() * sin(_angle));
 
     QTransform matrix;
-    matrix.translate(_r, _r);
+    matrix.translate(r(), r());
     matrix.rotate(0.7);
-    matrix.translate(-_r, -_r);
+    matrix.translate(-r(), -r());
     setTransform(matrix, true);
 
     if(pos().y() + r() >= scene()->height()) {
@@ -96,7 +114,7 @@ void Ball::move() {
     }
     else if(pos().y() <= 0 && goes_up())
         bounce_horizontal();
-    if(pos().x() + 2*_r >= scene()->width() && goes_right())
+    if(pos().x() + 2*r() >= scene()->width() && goes_right())
         bounce_vertical();
     else if(pos().x() <= 0 && goes_left())
         bounce_vertical();
@@ -111,20 +129,19 @@ void Ball::move() {
         if(collidesWithItem(brick)) {
             if(level->mode_name() == Samurai)
                 brick->hit();
-            else if(bounce_brick(brick)) {
+            else if(bounce_brick(brick))
                 brick->hit();
-                blink();
-            }
+            blink();
         }
+    }
+
+    if(_timer->interval() > level->min_ball_timer_interval) {
+        _interval -= 0.0001;
+        _timer->setInterval(_interval);
     }
 
     if(level->solved())
         level->clean();
-
-    if(_timer->interval() > level->min_ball_timer_interval) {
-        interval -= 0.0001;
-        _timer->setInterval(interval);
-    }
 }
 
 bool Ball::bounce_brick(Brick* brick) {
@@ -157,11 +174,11 @@ void Ball::bounce_point(QPointF P) {
 }
 
 void Ball::bounce(double alpha) {
-    angle = 2 * alpha - angle;
-    if(angle < 0)
-        angle += 2 * M_PI;
-    if(angle > 2 * M_PI)
-        angle -= 2 * M_PI;
+    _angle = 2 * alpha - _angle;
+    if(_angle < 0)
+        _angle += 2 * M_PI;
+    if(_angle > 2 * M_PI)
+        _angle -= 2 * M_PI;
 }
 
 void Ball::bounce_vertical() {
@@ -177,11 +194,11 @@ bool Ball::goes_to(double px, double py) {
 }
 
 bool Ball::goes_to(QPointF P) {
-    return cos(angle_to(P) - angle) > 0;
+    return cos(angle_to(P) - _angle) > 0;
 }
 
 bool Ball::goes_up() {
-    return sin(angle) > 0;
+    return sin(_angle) > 0;
 }
 
 bool Ball::goes_down() {
@@ -189,7 +206,7 @@ bool Ball::goes_down() {
 }
 
 bool Ball::goes_left() {
-    return cos(angle) < 0;
+    return cos(_angle) < 0;
 }
 
 bool Ball::goes_right() {
@@ -209,13 +226,18 @@ double Ball::y() {
 }
 
 double Ball::r() {
-    return _r;
+    return ((level->mode_name() == Speed) ? _speed_r : _r);
+}
+
+double Ball::speed() {
+    return ((level->mode_name() == Speed) ? _speed_speed : _speed);
 }
 
 void Ball::move_eyes() {
     _eyes_timer->setInterval(1600);
-
-    if(level->mode_name() == Samurai)
+    if(level->mode_name() == Speed)
+        setPixmap(catface_speed_image);
+    else if(level->mode_name() == Samurai)
         setPixmap(catface_samurai_images[qrand()%3]);
     else
         setPixmap(catface_images[qrand()%5]);

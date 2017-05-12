@@ -5,7 +5,6 @@
 #include <QTimer>
 #include <QDebug>
 #include <math.h>
-#include <typeinfo>
 
 extern Level *level;
 
@@ -32,16 +31,17 @@ void Bullet::move() {
     // kada je ugao 0, metak se krece na gore
     setPos(x() + _speed * sin(_angle), y() - _speed * cos(_angle));
 
-    if(pos().y() + pixmap().width() < 0)
+    if(pos().y() + pixmap().width() < 0) {
         destroy();
+        return;
+    }
 
-    QList<QGraphicsItem*> colliding_items = collidingItems();
-    QList<QGraphicsItem*>::iterator it = colliding_items.begin();
-    QList<QGraphicsItem*>::iterator it_end = colliding_items.end();
-
+    QList<Brick*> bricks = level->bricks();
+    QList<Brick*>::iterator it = bricks.begin();
+    QList<Brick*>::iterator it_end = bricks.end();
     bool hit = false;
     for(;it != it_end; it++) {
-        if(typeid(**it) == typeid(Brick)) {
+        if(collidesWithItem(*it)) {
             Brick* brick = (Brick*)*it;
             brick->hit();
             hit = true;

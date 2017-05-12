@@ -2,11 +2,13 @@
 #define PACKAGE_H
 
 #include "fallingitem.h"
+#include <QDebug>
 
 class Package : public FallingItem
 {
 public:
     Package(const QString& pic_addr, double x, double y, QGraphicsItem* parent = 0);
+    void reset();
     virtual void upgrade() = 0;
     void move();
 };
@@ -57,6 +59,13 @@ class FireModeActivate : public Package
 {
 public:
     FireModeActivate(double x, double y, QGraphicsItem* parent = 0);
+    void upgrade();
+};
+
+class SpeedModeActivate : public Package
+{
+public:
+    SpeedModeActivate(double x, double y, QGraphicsItem* parent = 0);
     void upgrade();
 };
 

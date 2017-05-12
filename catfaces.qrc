@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/catface.png</file>
+        <file>images/catface_blink.png</file>
+        <file>images/catface_down.png</file>
+        <file>images/catface_left.png</file>
+        <file>images/catface_right.png</file>
+        <file>images/catface_samurai.png</file>
+        <file>images/catface_samurai_left.png</file>
+        <file>images/catface_samurai_right.png</file>
+        <file>images/catface_speed.png</file>
+        <file>images/catface_speed_blink.png</file>
+        <file>images/catface_up.png</file>
+    </qresource>
+</RCC>

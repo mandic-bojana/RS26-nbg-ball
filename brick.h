@@ -5,12 +5,13 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include "package.h"
 
 class Brick : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    Brick(double w = 40, double h = 20, double x = 5, double y = 5, QGraphicsItem *parent = 0);
+    Brick(QString pic_addr, double w, double h, double x = 5, double y = 5, QGraphicsItem *parent = 0);
     double width();
     double height();
     bool frozen();
@@ -23,14 +24,38 @@ public:
     void hit();
     void create_ice();
     void freeze(double ice_opacity_increase = 0.02);
+    void unfreeze();
 
     void randomize_package(double x, double y);
 
 private:
     double _width;
     double _height;
-    bool _frozen;
     QGraphicsPixmapItem * _ice;
+};
+
+class YellowBrick : public Brick
+{
+public:
+    YellowBrick(double w, double h, double x = 5, double y = 5, QGraphicsItem *parent = 0);
+};
+
+class RedBrick : public Brick
+{
+public:
+    RedBrick(double w, double h, double x = 5, double y = 5, QGraphicsItem *parent = 0);
+};
+
+class GreenBrick : public Brick
+{
+public:
+    GreenBrick(double w, double h, double x = 5, double y = 5, QGraphicsItem *parent = 0);
+};
+
+class BlueBrick : public Brick
+{
+public:
+    BlueBrick(double w, double h, double x = 5, double y = 5, QGraphicsItem *parent = 0);
 };
 
 #endif // BRICK_H

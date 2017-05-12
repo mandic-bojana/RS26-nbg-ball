@@ -36,6 +36,7 @@ public:
     double x();
     double y();
     double r();
+    double speed();
 
     bool is_active();
     void activate();
@@ -43,21 +44,28 @@ public:
 
     void blink();
 
+    void reset();
+    void set_speed_mode();
+
 public slots:
     void move();    
     void move_eyes();
 
 private:
-    double interval;
+    double _interval;
     double _r;
-    double angle;
-    double speed;
-    bool active;
+    double _speed_r;
+    double _angle;
+    double _speed;
+    double _speed_speed;
+    bool _active;
     QTimer *_timer;
     QTimer *_eyes_timer;
     QVector<QPixmap> catface_images;
     QVector<QPixmap> catface_samurai_images;
     QPixmap catface_blink_image;
+    QPixmap catface_speed_image;
+    QPixmap catface_speed_blink_image;
 };
 
 #endif // BALL_H

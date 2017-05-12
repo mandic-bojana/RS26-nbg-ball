@@ -14,7 +14,7 @@
 
 using namespace std;
 
-enum ModeName {Default, Winter, Samurai, Fire};
+enum ModeName {Default, Winter, Samurai, Fire, Speed};
 
 class Level : public QGraphicsView
 {
@@ -31,17 +31,25 @@ public:
 
     void load_scene();
     void load_bricks();
+
     bool solved();
+    void clean();
     void next_level();
     void repeat_level();
-    void clean();
+
+    void unfreeze();
 
     double scaled(double x);
 
     static const char* plate_pic_address;
     static const char* package_pic_address;
-    static const char* brick_pic_address;
+    static const char* fire_plate_pic_address;
     static const char* bullet_pic_address;
+
+    static const char* yellow_brick_pic_address;
+    static const char* red_brick_pic_address;
+    static const char* green_brick_pic_address;
+    static const char* blue_brick_pic_address;
 
     static const char* catface_pic_address;
     static const char* catface_up_pic_address;
@@ -52,21 +60,32 @@ public:
     static const char* catface_samurai_pic_address;
     static const char* catface_samurai_left_pic_address;
     static const char* catface_samurai_right_pic_address;
+    static const char* catface_speed_pic_address;
+    static const char* catface_speed_blink_pic_address;
     static const char* snowflake_pic_address;
+    static const char* speed_pic_address;
     static const char* flower_pic_address;
     static const char* winter_text_pic_address;
     static const char* samurai_text_pic_address;
     static const char* fire_text_pic_address;
+    static const char* speed_text_pic_address;
 
     static const char* increase_plate_length_pic_address;
     static const char* decrease_plate_length_pic_address;
     static const char* increase_plate_height_pic_address;
     static const char* decrease_plate_height_pic_address;
 
+    static const char* ice_cream_pic_address;
+    static const char* speed_candy_pic_address;
+    static const char* pepper_pic_address;
+    static const char* sushi_pic_address;
+
     static const double default_ball_radius;
     static const double default_ball_speed;
     static const double default_ball_angle;
     static const double default_ball_timer_interval;
+    static const double default_speed_ball_radius;
+    static const double default_speed_ball_speed;
     static const double default_bullet_radius;
     static const double default_bullet_speed;
     static const double default_bullet_timer_interval;

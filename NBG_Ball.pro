@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QMAKE_CXXFLAGS += -std=c++0x
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -37,6 +38,10 @@ HEADERS  += \
 FORMS    +=
 
 RESOURCES += \
-    resources.qrc
+    levels.qrc \
+    catfaces.qrc \
+    modes.qrc \
+    packages.qrc \
+    elements.qrc
 
 DISTFILES +=
