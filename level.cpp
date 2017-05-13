@@ -90,6 +90,9 @@ void Level::load_bricks() {
             case 'o':
                 brick = new OldBrick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
                 break;
+            case 'i':
+                brick = new FrozenBrick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
+                break;
             }
             if(brick)
                 _scene->addItem(brick);
@@ -176,7 +179,9 @@ void Level::mousePressEvent(QMouseEvent *event) {
 void Level::keyPressEvent(QKeyEvent *event) {
     if(event->key() == Qt::Key_Escape)
         parentWidget()->close();
-/*
+    if(event->key() == Qt::Key_Right)
+        clean();
+    /*
     else if(_finished)
         return;
     else switch(event->key()) {

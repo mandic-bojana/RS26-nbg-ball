@@ -117,3 +117,11 @@ BlueBrick::BlueBrick(double w, double h, double x, double y, QGraphicsItem *pare
 
 OldBrick::OldBrick(double w, double h, double x, double y, QGraphicsItem *parent)
     : Brick(level->old_brick_pic_address, w, h, x, y, parent) { }
+
+FrozenBrick::FrozenBrick(double w, double h, double x, double y, QGraphicsItem *parent)
+    : Brick(level->red_brick_pic_address, w, h, x, y, parent) {
+
+    create_ice();
+    _ice->setOpacity(0.9);
+    setZValue(-1);
+}

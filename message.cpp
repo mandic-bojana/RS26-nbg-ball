@@ -24,6 +24,7 @@ Message::Message(const QString& picture_address, QGraphicsItem* parent)
     _timer = new QTimer(this);
     connect(_timer, SIGNAL(timeout()), this, SLOT(disappear()));
     _timer->start(30);
+    setZValue(1);
 }
 
 Message::~Message() {
