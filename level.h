@@ -4,8 +4,6 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QWidget>
-#include <QMediaPlayer>
-#include <QMediaPlaylist>
 #include <QList>
 #include <string>
 #include <vector>
@@ -82,7 +80,7 @@ public:
     static const char* ice_cream_pic_address;
     static const char* speed_candy_pic_address;
     static const char* pepper_pic_address;
-    static const char* katana_pic_address;
+    static const char* sushi_pic_address;
 
     static const double default_ball_radius;
     static const double default_ball_speed;
@@ -120,8 +118,6 @@ public slots:
     void keyPressEvent(QKeyEvent *event);
 
 private:
-    QMediaPlaylist *_playlist;
-    QMediaPlayer *_player;
     QGraphicsScene *_scene;
     Plate *_plate;
     Ball *_ball;

@@ -16,6 +16,7 @@ Bullet::Bullet(QGraphicsItem* parent)
     _speed = level->scaled(level->default_bullet_speed);
     setPos(level->plate()->top() - QPointF(_r, _r));
 
+
     QTimer* timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
     timer->start(level->default_bullet_timer_interval);

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui multimedia
+QT       += core gui
 QMAKE_CXXFLAGS += -std=c++0x
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -42,7 +42,6 @@ RESOURCES += \
     catfaces.qrc \
     modes.qrc \
     packages.qrc \
-    elements.qrc \
-    level_music.qrc
+    elements.qrc
 
 DISTFILES +=

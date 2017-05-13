@@ -16,16 +16,15 @@
 
 using namespace std;
 
-QString level_addr(int i, QString extension = ".nbg", bool qrc = false) {
+QString level_addr(int i, const char* extension = ".nbg", const char* prefix = "", bool qrc = false) {
     QString addr(":/levels/");
     if(qrc)
         addr = "qrc" + addr;
-
+    addr +=prefix;
     char no[3];
     sprintf(no, "%d\0", i);
     addr += QString(no);
-
-    addr += extension;
+    addr += QString(extension);
     return addr;
 }
 
@@ -39,10 +38,6 @@ Level::Level(QWidget *parent, int level) {
     setCursor(Qt::CrossCursor);
 
     _level = level;
-
-    _player = new QMediaPlayer;
-    _player->setVolume(100);
-    _playlist = new QMediaPlaylist;
 }
 
 void Level::load_scene() {
@@ -64,14 +59,8 @@ void Level::load_scene() {
     _scene->addItem(_ball);
     _ball->setZValue(1);
 
-    _playlist->clear();
-    _playlist->addMedia(QUrl(level_addr(_level, ".mp3", true)));
-    _playlist->setPlaybackMode(QMediaPlaylist::Loop);
-
-    _player->setPlaylist(_playlist);
-    _player->play();
-
     load_bricks();
+    new Message(level_addr(_level+1, ".png", "level"));
 }
 
 void Level::load_bricks() {
@@ -107,7 +96,7 @@ void Level::load_bricks() {
                 break;
             case 'i':
                 brick = new FrozenBrick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
-                break;
+            break;
             }
             if(brick)
                 _scene->addItem(brick);
@@ -117,9 +106,8 @@ void Level::load_bricks() {
 }
 
 Level::~Level() {
-    clean();
-    delete _player;
     delete _mode;
+    clean();
 }
 
 Plate *Level::plate() {
@@ -154,7 +142,6 @@ bool Level::solved() {
 }
 
 void Level::clean() {
-    _player->stop();
     _finished = true;
     _scene->clear();
 }
@@ -196,9 +183,7 @@ void Level::mousePressEvent(QMouseEvent *event) {
 void Level::keyPressEvent(QKeyEvent *event) {
     if(event->key() == Qt::Key_Escape)
         parentWidget()->close();
-    if(event->key() == Qt::Key_Right)
-        clean();
-    /*
+/*
     else if(_finished)
         return;
     else switch(event->key()) {
@@ -322,7 +307,7 @@ const char* Level::increase_plate_height_pic_address = ":/images/plate_increase_
 const char* Level::decrease_plate_height_pic_address = ":/images/plate_decrease_height.png";
 
 const char* Level::ice_cream_pic_address = ":/images/ice_cream.png";
-const char* Level::katana_pic_address = ":/images/katana.png";
+const char* Level::sushi_pic_address = ":/images/sushi.png";
 const char* Level::speed_candy_pic_address = ":/images/speed_candy.png";
 const char* Level::pepper_pic_address = ":/images/pepper.png";
 
@@ -349,7 +334,7 @@ const double Level::default_fallingitem_length = 15;
 const double Level::default_fallingitem_speed = 8;
 
 const double Level::default_message_width = 400;
-const double Level::default_message_height = 200;
+const double Level::default_message_height = 150;
 
 const double Level::min_ball_timer_interval = 5;
 const double Level::max_plate_excess = 60;

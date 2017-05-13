@@ -10,5 +10,10 @@
         <file>levels/3.png</file>
         <file>levels/4.nbg</file>
         <file>levels/4.png</file>
+        <file>levels/level1.png</file>
+        <file>levels/level2.png</file>
+        <file>levels/level3.png</file>
+        <file>levels/level4.png</file>
+        <file>levels/level5.png</file>
     </qresource>
 </RCC>
