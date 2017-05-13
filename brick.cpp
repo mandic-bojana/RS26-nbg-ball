@@ -114,3 +114,6 @@ GreenBrick::GreenBrick(double w, double h, double x, double y, QGraphicsItem *pa
 
 BlueBrick::BlueBrick(double w, double h, double x, double y, QGraphicsItem *parent)
     : Brick(level->blue_brick_pic_address, w, h, x, y, parent) { }
+
+OldBrick::OldBrick(double w, double h, double x, double y, QGraphicsItem *parent)
+    : Brick(level->old_brick_pic_address, w, h, x, y, parent) { }

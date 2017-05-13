@@ -58,4 +58,11 @@ public:
     BlueBrick(double w, double h, double x = 5, double y = 5, QGraphicsItem *parent = 0);
 };
 
+class OldBrick : public Brick
+{
+public:
+    OldBrick(double w, double h, double x = 5, double y = 5, QGraphicsItem *parent = 0);
+};
+
+
 #endif // BRICK_H

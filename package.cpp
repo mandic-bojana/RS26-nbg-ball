@@ -31,7 +31,7 @@ DecreasePlateWidth::DecreasePlateWidth(double x, double y, QGraphicsItem *parent
     : Package(level->decrease_plate_height_pic_address, x, y, parent) { }
 
 SamuraiModeActivate::SamuraiModeActivate(double x, double y, QGraphicsItem *parent)
-    : Package(level->sushi_pic_address, x, y, parent) { }
+    : Package(level->katana_pic_address, x, y, parent) { }
 
 WinterModeActivate::WinterModeActivate(double x, double y, QGraphicsItem *parent)
     : Package(level->ice_cream_pic_address, x, y, parent) { }

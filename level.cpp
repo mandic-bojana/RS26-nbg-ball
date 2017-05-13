@@ -87,6 +87,9 @@ void Level::load_bricks() {
             case 'b':
                 brick = new BlueBrick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
                 break;
+            case 'o':
+                brick = new OldBrick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
+                break;
             }
             if(brick)
                 _scene->addItem(brick);
@@ -268,6 +271,7 @@ const char* Level::yellow_brick_pic_address = ":/images/yellow_brick.png";
 const char* Level::red_brick_pic_address = ":/images/red_brick.png";
 const char* Level::green_brick_pic_address = ":/images/green_brick.png";
 const char* Level::blue_brick_pic_address = ":/images/blue_brick.png";
+const char* Level::old_brick_pic_address = ":/images/old_brick.png";
 
 const char* Level::catface_pic_address = ":/images/catface.png";
 const char* Level::catface_up_pic_address = ":/images/catface_up.png";
@@ -284,6 +288,7 @@ const char* Level::catface_speed_blink_pic_address = ":/images/catface_speed_bli
 const char* Level::snowflake_pic_address = ":/images/snowflake.png";
 const char* Level::speed_pic_address = ":/images/speed.png";
 const char* Level::flower_pic_address = ":/images/flower.png";
+const char* Level::flame_pic_address = ":/images/flame.png";
 const char* Level::winter_text_pic_address = ":/images/winter_text.png";
 const char* Level::samurai_text_pic_address = ":/images/samurai_text.png";
 const char* Level::fire_text_pic_address = ":/images/fire_text.png";
@@ -295,7 +300,7 @@ const char* Level::increase_plate_height_pic_address = ":/images/plate_increase_
 const char* Level::decrease_plate_height_pic_address = ":/images/plate_decrease_height.png";
 
 const char* Level::ice_cream_pic_address = ":/images/ice_cream.png";
-const char* Level::sushi_pic_address = ":/images/sushi.png";
+const char* Level::katana_pic_address = ":/images/katana.png";
 const char* Level::speed_candy_pic_address = ":/images/speed_candy.png";
 const char* Level::pepper_pic_address = ":/images/pepper.png";
 

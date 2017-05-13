@@ -50,6 +50,7 @@ public:
     static const char* red_brick_pic_address;
     static const char* green_brick_pic_address;
     static const char* blue_brick_pic_address;
+    static const char* old_brick_pic_address;
 
     static const char* catface_pic_address;
     static const char* catface_up_pic_address;
@@ -65,6 +66,7 @@ public:
     static const char* snowflake_pic_address;
     static const char* speed_pic_address;
     static const char* flower_pic_address;
+    static const char* flame_pic_address;
     static const char* winter_text_pic_address;
     static const char* samurai_text_pic_address;
     static const char* fire_text_pic_address;
@@ -78,7 +80,7 @@ public:
     static const char* ice_cream_pic_address;
     static const char* speed_candy_pic_address;
     static const char* pepper_pic_address;
-    static const char* sushi_pic_address;
+    static const char* katana_pic_address;
 
     static const double default_ball_radius;
     static const double default_ball_speed;

@@ -41,7 +41,7 @@ SamuraiMode::SamuraiMode()
     : Mode(level->samurai_text_pic_address, level->flower_pic_address) { }
 
 FireMode::FireMode()
-    : Mode(level->fire_text_pic_address, level->bullet_pic_address) {
+    : Mode(level->fire_text_pic_address, level->flame_pic_address) {
 
     level->plate()->set_on_fire(true);
 }

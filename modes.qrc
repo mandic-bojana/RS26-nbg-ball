@@ -7,5 +7,6 @@
         <file>images/speed_text.png</file>
         <file>images/winter_text.png</file>
         <file>images/speed.png</file>
+        <file>images/flame.png</file>
     </qresource>
 </RCC>
