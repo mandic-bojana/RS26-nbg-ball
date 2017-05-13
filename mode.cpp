@@ -13,13 +13,17 @@ Mode::Mode(const QString &message_pic_addr, const QString &falling_item_pic_addr
     item_rain_timer = new QTimer();
     item_rain_timer->start(70);
     QObject::connect(item_rain_timer, SIGNAL(timeout()), this, SLOT(item_rain()));
-    QObject::connect(message->timer(), SIGNAL(destroyed(QObject*)), this, SLOT(stop_initializing_effect()));
+    QObject::connect(message/*->timer()*/, SIGNAL(destroyed(QObject*)), this, SLOT(stop_initializing_effect()));
+}
+
+Mode::~Mode() {
+    delete message;
+    delete item_rain_timer;
 }
 
 void Mode::reset() {
     if(level->mode_name() == Speed)
         level->ball()->reset();
-    level->ball()->move_eyes();
 
     level->plate()->set_on_fire(false);
 }
@@ -29,8 +33,8 @@ void Mode::item_rain() {
 }
 
 void Mode::stop_initializing_effect() {
+    message = nullptr;
     item_rain_timer->stop();
-    delete item_rain_timer;
 }
 
 SamuraiMode::SamuraiMode()

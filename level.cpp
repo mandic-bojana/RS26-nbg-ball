@@ -96,6 +96,7 @@ void Level::load_bricks() {
 }
 
 Level::~Level() {
+    delete _mode;
     clean();
 }
 
@@ -131,7 +132,6 @@ bool Level::solved() {
 }
 
 void Level::clean() {
-    delete _mode;
     _finished = true;
     _scene->clear();
 }
@@ -145,17 +145,13 @@ void Level::repeat_level() {
 }
 
 void Level::next_level() {
-    _level++;
-    if(_level < LEVELS_NO)
+    if(++_level < LEVELS_NO)
         load_scene();
+    else
+        parentWidget()->close();
 }
 
 void Level::mouseMoveEvent(QMouseEvent *event) {
-    if(event->x() <= 5 || event->x() >= width() - 5 || event->y() <= 5 || event->y() >= height() - 5)
-        setCursor(Qt::ForbiddenCursor);
-    else
-        setCursor(Qt::CrossCursor);
-
     if(!_finished) {
         _plate->move(event->x() - _plate->x());
         if(!_ball->is_active())
@@ -177,7 +173,7 @@ void Level::mousePressEvent(QMouseEvent *event) {
 void Level::keyPressEvent(QKeyEvent *event) {
     if(event->key() == Qt::Key_Escape)
         parentWidget()->close();
-
+/*
     else if(_finished)
         return;
     else switch(event->key()) {
@@ -221,7 +217,7 @@ void Level::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_B:
         change_mode(Default);
         break;
-    }
+    }*/
 }
 
 ModeName Level::mode_name() {
@@ -307,7 +303,7 @@ const double Level::default_ball_timer_interval = 7;
 const double Level::default_ball_angle = 1.2;
 const double Level::default_ball_radius = 20;
 const double Level::default_ball_speed = 3;
-const double Level::default_speed_ball_radius = 8;
+const double Level::default_speed_ball_radius = 16;
 const double Level::default_speed_ball_speed = 4.2;
 const double Level::default_bullet_radius = 5.5;
 const double Level::default_bullet_speed = 10;
