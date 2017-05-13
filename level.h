@@ -4,6 +4,8 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QWidget>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
 #include <QList>
 #include <string>
 #include <vector>
@@ -118,6 +120,8 @@ public slots:
     void keyPressEvent(QKeyEvent *event);
 
 private:
+    QMediaPlaylist *_playlist;
+    QMediaPlayer *_player;
     QGraphicsScene *_scene;
     Plate *_plate;
     Ball *_ball;

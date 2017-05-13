@@ -16,12 +16,16 @@
 
 using namespace std;
 
-QString level_addr(int i, const char* extension = ".nbg") {
+QString level_addr(int i, QString extension = ".nbg", bool qrc = false) {
     QString addr(":/levels/");
+    if(qrc)
+        addr = "qrc" + addr;
+
     char no[3];
     sprintf(no, "%d\0", i);
     addr += QString(no);
-    addr += QString(extension);
+
+    addr += extension;
     return addr;
 }
 
@@ -35,6 +39,10 @@ Level::Level(QWidget *parent, int level) {
     setCursor(Qt::CrossCursor);
 
     _level = level;
+
+    _player = new QMediaPlayer;
+    _player->setVolume(100);
+    _playlist = new QMediaPlaylist;
 }
 
 void Level::load_scene() {
@@ -55,6 +63,13 @@ void Level::load_scene() {
     _ball = new Ball();
     _scene->addItem(_ball);
     _ball->setZValue(1);
+
+    _playlist->clear();
+    _playlist->addMedia(QUrl(level_addr(_level, ".mp3", true)));
+    _playlist->setPlaybackMode(QMediaPlaylist::Loop);
+
+    _player->setPlaylist(_playlist);
+    _player->play();
 
     load_bricks();
 }
@@ -102,8 +117,9 @@ void Level::load_bricks() {
 }
 
 Level::~Level() {
-    delete _mode;
     clean();
+    delete _player;
+    delete _mode;
 }
 
 Plate *Level::plate() {
@@ -138,6 +154,7 @@ bool Level::solved() {
 }
 
 void Level::clean() {
+    _player->stop();
     _finished = true;
     _scene->clear();
 }
