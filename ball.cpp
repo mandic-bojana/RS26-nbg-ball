@@ -59,11 +59,13 @@ void Ball::set_to_plate() {
 }
 
 void Ball::reset() {
-    setPos(pos().x() + _speed_r - _r, pos().y() + _speed_r - _r);
+    setTransform(QTransform());
+    setPos(pos().x() + _speed_r - _r, pos().y() + _speed_r - _r);//, 2*_r, 2*_r);
 }
 
 void Ball::set_speed_mode() {
-    setPos(pos().x() - _speed_r + _r, pos().y() - _speed_r + _r);
+    setTransform(QTransform());
+    setPos(pos().x() - _speed_r + _r, pos().y() - _speed_r + _r);//, 2*_speed_r, 2*_speed_r);
 }
 
 void Ball::blink() {
@@ -103,7 +105,7 @@ void Ball::move() {
 
     QTransform matrix;
     matrix.translate(r(), r());
-    matrix.rotate(0.7);
+    matrix.rotate(0.4);
     matrix.translate(-r(), -r());
     setTransform(matrix, true);
 

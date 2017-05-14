@@ -7,5 +7,6 @@
         <file>images/green_brick.png</file>
         <file>images/plate.png</file>
         <file>images/red_brick.png</file>
+        <file>images/old_brick.png</file>
     </qresource>
 </RCC>

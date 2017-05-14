@@ -28,7 +28,7 @@ public:
 
     void randomize_package(double x, double y);
 
-private:
+protected:
     double _width;
     double _height;
     QGraphicsPixmapItem * _ice;
@@ -56,6 +56,18 @@ class BlueBrick : public Brick
 {
 public:
     BlueBrick(double w, double h, double x = 5, double y = 5, QGraphicsItem *parent = 0);
+};
+
+class OldBrick : public Brick
+{
+public:
+    OldBrick(double w, double h, double x = 5, double y = 5, QGraphicsItem *parent = 0);
+};
+
+class FrozenBrick : public Brick
+{
+public:
+    FrozenBrick(double w, double h, double x = 5, double y = 5, QGraphicsItem *parent = 0);
 };
 
 #endif // BRICK_H

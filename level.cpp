@@ -16,8 +16,11 @@
 
 using namespace std;
 
-QString level_addr(int i, const char* extension = ".nbg") {
+QString level_addr(int i, const char* extension = ".nbg", const char* prefix = "", bool qrc = false) {
     QString addr(":/levels/");
+    if(qrc)
+        addr = "qrc" + addr;
+    addr +=prefix;
     char no[3];
     sprintf(no, "%d\0", i);
     addr += QString(no);
@@ -57,6 +60,7 @@ void Level::load_scene() {
     _ball->setZValue(1);
 
     load_bricks();
+    new Message(level_addr(_level+1, ".png", "level"));
 }
 
 void Level::load_bricks() {
@@ -87,6 +91,12 @@ void Level::load_bricks() {
             case 'b':
                 brick = new BlueBrick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
                 break;
+            case 'o':
+                brick = new OldBrick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
+                break;
+            case 'i':
+                brick = new FrozenBrick(brick_width, brick_height, bricks_space + j * (brick_width + bricks_space), bricks_space + i * (brick_height + bricks_space));
+            break;
             }
             if(brick)
                 _scene->addItem(brick);
@@ -96,6 +106,7 @@ void Level::load_bricks() {
 }
 
 Level::~Level() {
+    delete _mode;
     clean();
 }
 
@@ -131,7 +142,6 @@ bool Level::solved() {
 }
 
 void Level::clean() {
-    delete _mode;
     _finished = true;
     _scene->clear();
 }
@@ -145,17 +155,13 @@ void Level::repeat_level() {
 }
 
 void Level::next_level() {
-    _level++;
-    if(_level < LEVELS_NO)
+    if(++_level < LEVELS_NO)
         load_scene();
+    else
+        parentWidget()->close();
 }
 
 void Level::mouseMoveEvent(QMouseEvent *event) {
-    if(event->x() <= 5 || event->x() >= width() - 5 || event->y() <= 5 || event->y() >= height() - 5)
-        setCursor(Qt::ForbiddenCursor);
-    else
-        setCursor(Qt::CrossCursor);
-
     if(!_finished) {
         _plate->move(event->x() - _plate->x());
         if(!_ball->is_active())
@@ -177,7 +183,7 @@ void Level::mousePressEvent(QMouseEvent *event) {
 void Level::keyPressEvent(QKeyEvent *event) {
     if(event->key() == Qt::Key_Escape)
         parentWidget()->close();
-
+/*
     else if(_finished)
         return;
     else switch(event->key()) {
@@ -221,7 +227,7 @@ void Level::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_B:
         change_mode(Default);
         break;
-    }
+    }*/
 }
 
 ModeName Level::mode_name() {
@@ -272,6 +278,7 @@ const char* Level::yellow_brick_pic_address = ":/images/yellow_brick.png";
 const char* Level::red_brick_pic_address = ":/images/red_brick.png";
 const char* Level::green_brick_pic_address = ":/images/green_brick.png";
 const char* Level::blue_brick_pic_address = ":/images/blue_brick.png";
+const char* Level::old_brick_pic_address = ":/images/old_brick.png";
 
 const char* Level::catface_pic_address = ":/images/catface.png";
 const char* Level::catface_up_pic_address = ":/images/catface_up.png";
@@ -288,6 +295,7 @@ const char* Level::catface_speed_blink_pic_address = ":/images/catface_speed_bli
 const char* Level::snowflake_pic_address = ":/images/snowflake.png";
 const char* Level::speed_pic_address = ":/images/speed.png";
 const char* Level::flower_pic_address = ":/images/flower.png";
+const char* Level::flame_pic_address = ":/images/flame.png";
 const char* Level::winter_text_pic_address = ":/images/winter_text.png";
 const char* Level::samurai_text_pic_address = ":/images/samurai_text.png";
 const char* Level::fire_text_pic_address = ":/images/fire_text.png";
@@ -307,7 +315,7 @@ const double Level::default_ball_timer_interval = 7;
 const double Level::default_ball_angle = 1.2;
 const double Level::default_ball_radius = 20;
 const double Level::default_ball_speed = 3;
-const double Level::default_speed_ball_radius = 8;
+const double Level::default_speed_ball_radius = 16;
 const double Level::default_speed_ball_speed = 4.2;
 const double Level::default_bullet_radius = 5.5;
 const double Level::default_bullet_speed = 10;
@@ -326,7 +334,7 @@ const double Level::default_fallingitem_length = 15;
 const double Level::default_fallingitem_speed = 8;
 
 const double Level::default_message_width = 400;
-const double Level::default_message_height = 200;
+const double Level::default_message_height = 150;
 
 const double Level::min_ball_timer_interval = 5;
 const double Level::max_plate_excess = 60;
