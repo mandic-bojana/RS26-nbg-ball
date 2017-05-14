@@ -77,6 +77,8 @@ void Plate::move(double d) {
 
     if(!level->ball()->is_active())
         level->ball()->set_to_plate();
+
+    level->ball()->bounce_plate();
 }
 
 void Plate::set_on_fire(bool fire) {

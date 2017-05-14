@@ -120,8 +120,8 @@ void Ball::move() {
         bounce_vertical();
     else if(pos().x() <= 0 && goes_left())
         bounce_vertical();
-    if(d(level->plate()->center(), C()) <= level->plate()->r() + r() && goes_to(level->plate()->center()))
-        bounce_point(level->plate()->center());
+
+    bounce_plate();
 
     QList<Brick*> bricks = level->bricks();
     QList<Brick*>::iterator it = bricks.begin();
@@ -189,6 +189,11 @@ void Ball::bounce_vertical() {
 
 void Ball::bounce_horizontal() {
     Ball::bounce(0);
+}
+
+void Ball::bounce_plate() {
+    if(d(level->plate()->center(),C()) <= level->plate()->r() + r() && goes_to(level->plate()->center()))
+        bounce_point(level->plate()->center());
 }
 
 bool Ball::goes_to(double px, double py) {

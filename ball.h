@@ -22,6 +22,7 @@ public:
     void bounce_vertical();
     void bounce_horizontal();
     bool bounce_brick(Brick* brick);
+    void bounce_plate();
 
     double angle_to(QPointF P);
 
