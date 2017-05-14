@@ -38,6 +38,10 @@ Level::Level(QWidget *parent, int level) {
     setCursor(Qt::CrossCursor);
 
     _level = level;
+
+    _player = new QMediaPlayer;
+    _player->setVolume(100);
+    _playlist = new QMediaPlaylist;
 }
 
 void Level::load_scene() {
@@ -58,6 +62,13 @@ void Level::load_scene() {
     _ball = new Ball();
     _scene->addItem(_ball);
     _ball->setZValue(1);
+
+    _playlist->clear();
+    _playlist->addMedia(QUrl(level_addr(_level, ".mp3", "", true)));
+    _playlist->setPlaybackMode(QMediaPlaylist::Loop);
+
+    _player->setPlaylist(_playlist);
+    _player->play();
 
     load_bricks();
     new Message(level_addr(_level+1, ".png", "level"));
