@@ -16,16 +16,18 @@
 
 using namespace std;
 
-QString level_addr(int i, const char* extension = ".nbg", const char* prefix = "", bool qrc = false) {
+QString level_addr(int i, QString extension = ".nbg", QString prefix = "", bool qrc = false) {
     QString addr(":/levels/");
     if(qrc)
         addr = "qrc" + addr;
-    addr +=prefix;
-    char no[3];
-    sprintf(no, "%d\0", i);
-    addr += QString(no);
+    addr += prefix;
+    addr += QString::number(i);
     addr += QString(extension);
     return addr;
+}
+
+QString format(int time) {
+    return QString::number(time/1000/60) + ":" + QString::number((time%60000)/1000) + "." + QString::number(time%1000/10);
 }
 
 Level::Level(QWidget *parent, int level) {
@@ -38,6 +40,10 @@ Level::Level(QWidget *parent, int level) {
     setCursor(Qt::CrossCursor);
 
     _level = level;
+    _paused = false;
+
+    _time = 0;
+    _timer = nullptr;
 
     _player = new QMediaPlayer;
     _player->setVolume(100);
@@ -51,8 +57,18 @@ void Level::load_scene() {
     _scene = new QGraphicsScene();
     setScene(_scene);
 
+    if(_timer)
+        delete _timer;
+    _timer = new QGraphicsTextItem(format(_time));
+    _timer->setPos(0, 0);
+    _timer->setDefaultTextColor(Qt::white);
+    _timer->setTextWidth(width()/4);
+    _timer->setFont(QFont("Times", width() / 40));
+
     _scene->setSceneRect(0, 0, width(), height());
     _scene->setBackgroundBrush(QBrush(QImage(level_addr(_level, ".png")).scaledToWidth(width())));
+
+    _scene->addItem(_timer);
 
     _plate = new Plate();
     _plate->setFlag(QGraphicsItem::ItemIsFocusable);
@@ -115,7 +131,6 @@ void Level::load_bricks() {
     }
     file.close();
 }
-
 Level::~Level() {
     delete _mode;
     clean();
@@ -148,6 +163,20 @@ void Level::unfreeze() {
         (*it)->unfreeze();
 }
 
+
+void Level::add_time(int time) {
+    _time += time;
+    _timer->setPlainText(format(_time));
+}
+
+void Level::pause(bool paused) {
+    _paused = paused;
+}
+
+bool Level::paused() {
+    return _paused;
+}
+
 bool Level::solved() {
     return bricks().empty();
 }
@@ -155,6 +184,7 @@ bool Level::solved() {
 void Level::clean() {
     _finished = true;
     _scene->clear();
+    _timer = nullptr;
 }
 
 double Level::scaled(double x) {
@@ -173,19 +203,19 @@ void Level::next_level() {
 }
 
 void Level::mouseMoveEvent(QMouseEvent *event) {
-    if(!_finished) {
+    if(!_finished && !_paused) {
         _plate->move(event->x() - _plate->x());
         if(!_ball->is_active())
-            _ball->setPos(event->x() - _ball->r(), _ball->pos().y());
+            _ball->set_to_plate();
     }
 }
 
 void Level::mousePressEvent(QMouseEvent *event) {
     if(_finished)
         next_level();
-    else if(!_ball->is_active())
+    else if(!_ball->is_active() && !_paused)
         _ball->activate();
-    else if(mode_name() == Fire) {
+    else if(mode_name() == Fire && !_paused) {
         Bullet* bullet=new Bullet();
         _scene->addItem(bullet);
     }
@@ -194,6 +224,9 @@ void Level::mousePressEvent(QMouseEvent *event) {
 void Level::keyPressEvent(QKeyEvent *event) {
     if(event->key() == Qt::Key_Escape)
         parentWidget()->close();
+
+    if(!_finished && event->key() == Qt::Key_P)
+        pause(!paused());
 /*
     else if(_finished)
         return;

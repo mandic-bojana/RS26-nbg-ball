@@ -34,6 +34,9 @@ public:
     void load_scene();
     void load_bricks();
 
+    void add_time(int time);
+    void pause(bool paused = true);
+    bool paused();
     bool solved();
     void clean();
     void next_level();
@@ -128,6 +131,10 @@ private:
     int _level;
     bool _finished;
     Mode* _mode;
+    bool _paused;
+
+    QGraphicsTextItem *_timer;
+    int _time;
 
     int bricks_row;
     int bricks_column;

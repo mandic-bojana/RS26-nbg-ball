@@ -40,7 +40,7 @@ public:
     double speed();
 
     bool is_active();
-    void activate();
+    void activate(bool active = true);
     void set_to_plate();
 
     void blink();
