@@ -1,6 +1,6 @@
 # Project information
 
-The NBG Ball is being developed as practical work within the course Software development on the Faculty of Mathematics in Belgrade. The project is coded in C++, and developed in QT 5.8 and Qt 5.5. Under Windows 7 and Linux Mint platforms, both.
+The NBG Ball is being developed as practical work within the course Software development on the Faculty of Mathematics in Belgrade. The project is coded in C++, and developed in Qt 5.8 and Qt 5.5. Under Windows 7 and Linux Mint platforms, both.
 NBG Ball is being developed by:
 + [Bojana Mandić](https://github.com/mandic-bojana "GitHub profile")
 and
