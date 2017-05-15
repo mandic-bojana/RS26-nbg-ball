@@ -12,7 +12,7 @@ The basic idea of the game is based on [DX-Ball](https://en.wikipedia.org/wiki/D
 
 # Executable version
 
-+ [Windows](https://github.com/MATF-RS17/RS26-nbg-ball/blob/master/NBG.rar "Download")
++ [Windows](../..//raw/master/NBG.rar "Download")
 
 # Power ups/downs
 
