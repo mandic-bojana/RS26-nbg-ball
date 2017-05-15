@@ -1,4 +1,6 @@
-# Project information
+# NBG Ball
+
+## Project information
 
 The NBG Ball is being developed as practical work within the course Software development on the Faculty of Mathematics in Belgrade. The project is coded in C++, and developed in Qt 5.8 and Qt 5.5. Under Windows 7 and Linux Mint platforms, both.
 NBG Ball is being developed by:
@@ -6,16 +8,16 @@ NBG Ball is being developed by:
 and
 + [Nikola Simić](https://github.com/simkers "GitHub profile").
 
-# Game information
+## Game information
 
 The basic idea of the game is based on [DX-Ball](https://en.wikipedia.org/wiki/DX-Ball "Wikipedia page") with all the ball/plate/brick/package interface. We had tried to implement that basic concept and improve it with some creative and interesting stuff.
 
-# Executable version
+## Executable version
 
 + [Windows](../..//raw/master/NBG.rar "Download")
 + [Linux](../..//raw/master/NBG_Ball.tar.gz "Download")
 
-# Power ups/downs
+## Power ups/downs
 
 | Package image | Effect when cought |
 |---------------|--------------------|
@@ -29,7 +31,7 @@ The basic idea of the game is based on [DX-Ball](https://en.wikipedia.org/wiki/D
 | <img src="../master/images/speed_candy.png" width="50" align = "middle"> | Starts Speed mode. Makes ball smaller and faster. |
 | <img src="../master/images/package.png" width="50" align = "middle"> | Stops any mode that is active. |
 
-# Screenshots
+## Screenshots
 
 ![Screenshot](../master/screenshots/1.png)
 ![Screenshot](../master/screenshots/2.png)
