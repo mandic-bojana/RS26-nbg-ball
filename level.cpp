@@ -26,8 +26,12 @@ QString level_addr(int i, QString extension = ".nbg", QString prefix = "", bool 
     return addr;
 }
 
+QString two_chars(int num) {
+    return (num<10 ? "0" : "") + QString::number(num);
+}
+
 QString format(int time) {
-    return QString::number(time/1000/60) + ":" + QString::number((time%60000)/1000) + "." + QString::number(time%1000/10);
+    return two_chars(time/1000/60) + ":" + two_chars((time%60000)/1000) + "." + QString::number(time%1000/100);
 }
 
 Level::Level(QWidget *parent, int level) {
@@ -61,7 +65,7 @@ void Level::load_scene() {
         delete _timer;
     _timer = new QGraphicsTextItem(format(_time));
     _timer->setPos(0, 0);
-    _timer->setDefaultTextColor(Qt::white);
+    _timer->setDefaultTextColor(Qt::gray);
     _timer->setTextWidth(width()/4);
     _timer->setFont(QFont("Times", width() / 40));
 
