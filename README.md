@@ -18,15 +18,15 @@ The basic idea of the game is based on [DX-Ball](https://en.wikipedia.org/wiki/D
 
 | Package image | Effect when cought |
 |---------------|--------------------|
-| ![](../master/images/plate_increase_height.png) | Increases plate height. |
-| ![](../master/images/plate_decrease_height.png) | Decreases plate height. |
-| ![](../master/images/plate_increase_length.png) | Increases plate length. |
-| ![](../master/images/plate_decrease_length.png) | Decreases plate length. |
-| ![](../master/images/ice_cream.png) | Starts Winter mode. Freezes every brick in level, so you have to hit it twice to destroy it. |
-| ![](../master/images/sushi.png) | Starts Samurai mode. Enables ball moving throught bricks. |
-| ![](../master/images/pepper.png) | Starts Fire mode. Enables player to destroy bricks by firing from the plate on mouse click. |
-| ![](../master/images/speed_candy.png) | Starts Speed mode. Makes ball smaller and faster. |
-| ![](../master/images/package.png) | Stops any mode that is active. |
+| <img src="../master/images/plate_increase_height.png" width="50" align = "middle"> | Increases plate height. |
+| <img src="../master/images/plate_decrease_height.png" width="50" align = "middle"> | Decreases plate height. |
+| <img src="../master/images/plate_increase_length.png" width="50" align = "middle"> | Increases plate length. |
+| <img src="../master/images/plate_decrease_length.png" width="50" align = "middle"> | Decreases plate length. |
+| <img src="../master/images/ice_cream.png" width="50" align = "middle"> | Starts Winter mode. Freezes every brick in level, so you have to hit it twice to destroy it. |
+| <img src="../master/images/sushi.png" width="50" align = "middle"> | Starts Samurai mode. Enables ball moving throught bricks. |
+| <img src="../master/images/pepper.png" width="50" align = "middle"> | Starts Fire mode. Enables player to destroy bricks by firing from the plate on mouse click. |
+| <img src="../master/images/speed_candy.png" width="50" align = "middle"> | Starts Speed mode. Makes ball smaller and faster. |
+| <img src="../master/images/package.png" width="50" align = "middle"> | Stops any mode that is active. |
 
 # Screenshots
 
