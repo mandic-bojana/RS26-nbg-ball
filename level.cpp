@@ -43,6 +43,7 @@ Level::Level(QWidget *parent, int level) {
     setMouseTracking(true);
     setCursor(Qt::CrossCursor);
 
+    _scene = nullptr;
     _level = level;
     _paused = false;
 
@@ -58,11 +59,17 @@ void Level::load_scene() {
     _finished = false;
     _mode = nullptr;
 
+    if(_timer)
+        delete _timer;
+
+    if(_scene) {
+        _scene->clear();
+        delete _scene;
+    }
+
     _scene = new QGraphicsScene();
     setScene(_scene);
 
-    if(_timer)
-        delete _timer;
     _timer = new QGraphicsTextItem(format(_time));
     _timer->setPos(0, 0);
     _timer->setDefaultTextColor(Qt::gray);
@@ -77,11 +84,9 @@ void Level::load_scene() {
     _plate = new Plate();
     _plate->setFlag(QGraphicsItem::ItemIsFocusable);
     _scene->addItem(_plate);
-    _plate->setZValue(2);
 
     _ball = new Ball();
     _scene->addItem(_ball);
-    _ball->setZValue(1);
 
     _playlist->clear();
     _playlist->addMedia(QUrl(level_addr(_level, ".mp3", "", true)));
@@ -188,7 +193,14 @@ bool Level::solved() {
 void Level::clean() {
     _finished = true;
     _scene->clear();
-    _timer = nullptr;
+
+    _timer = new QGraphicsTextItem(format(_time));
+    _timer->setPos(0, 0);
+    _timer->setDefaultTextColor(Qt::gray);
+    _timer->setTextWidth(width()/4);
+    _timer->setFont(QFont("Times", width() / 40));
+
+    _scene->addItem(_timer);
 }
 
 double Level::scaled(double x) {

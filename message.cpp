@@ -18,6 +18,7 @@ Message::Message(const QString& picture_address, QGraphicsItem* parent)
     setOpacity(1);
     setPos(level->scene()->width() / 2 - level->scaled(level->default_message_width) / 2,
            level->scene()->height() / 5 * 2 - level->scaled(level->default_message_height) / 2);
+    setZValue(4);
 
     level->scene()->addItem(this);
 
@@ -41,7 +42,3 @@ void Message::disappear() {
 QTimer *Message::timer() {
     return _timer;
 }
-
-
-
-
