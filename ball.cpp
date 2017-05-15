@@ -95,12 +95,20 @@ bool Ball::is_active() {
     return _active;
 }
 
-void Ball::activate() {
-    _active = true;
-    _timer->start(_interval);
+void Ball::activate(bool active) {
+    _active = active;
+    if(active)
+        _timer->start(_interval);
+    else
+        _timer->stop();
 }
 
 void Ball::move() {
+    if(level->paused())
+        return;
+
+    level->add_time(_timer->interval());
+
     setPos(pos().x() + speed() * cos(_angle), pos().y() - speed() * sin(_angle));
 
     QTransform matrix;

@@ -5,6 +5,8 @@
 #include <QGraphicsScene>
 #include <QWidget>
 #include <QList>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
 #include <string>
 #include <vector>
 #include "plate.h"
@@ -32,6 +34,9 @@ public:
     void load_scene();
     void load_bricks();
 
+    void add_time(int time);
+    void pause(bool paused = true);
+    bool paused();
     bool solved();
     void clean();
     void next_level();
@@ -118,12 +123,18 @@ public slots:
     void keyPressEvent(QKeyEvent *event);
 
 private:
+    QMediaPlaylist *_playlist;
+    QMediaPlayer *_player;
     QGraphicsScene *_scene;
     Plate *_plate;
     Ball *_ball;
     int _level;
     bool _finished;
     Mode* _mode;
+    bool _paused;
+
+    QGraphicsTextItem *_timer;
+    int _time;
 
     int bricks_row;
     int bricks_column;

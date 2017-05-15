@@ -16,6 +16,7 @@ FallingItem::FallingItem(const QString picture_address, double length, QGraphics
 
     _speed = level->scaled(level->default_fallingitem_speed);
     setPos(qrand() % int(level->scene()->width()), 0);
+    setZValue(3);
 
     level->scene()->addItem(this);
 

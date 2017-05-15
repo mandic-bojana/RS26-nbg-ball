@@ -16,6 +16,7 @@ Plate::Plate(QGraphicsItem *parent)
 
     setPixmap(_pic.scaled(2*_r, 2*_r));
     setPos(level->width()/2 - _r, level->height() - _excess);
+    setZValue(1);
 }
 
 QPixmap Plate::image() {

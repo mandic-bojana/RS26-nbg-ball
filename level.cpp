@@ -16,16 +16,22 @@
 
 using namespace std;
 
-QString level_addr(int i, const char* extension = ".nbg", const char* prefix = "", bool qrc = false) {
+QString level_addr(int i, QString extension = ".nbg", QString prefix = "", bool qrc = false) {
     QString addr(":/levels/");
     if(qrc)
         addr = "qrc" + addr;
-    addr +=prefix;
-    char no[3];
-    sprintf(no, "%d\0", i);
-    addr += QString(no);
+    addr += prefix;
+    addr += QString::number(i);
     addr += QString(extension);
     return addr;
+}
+
+QString two_chars(int num) {
+    return (num<10 ? "0" : "") + QString::number(num);
+}
+
+QString format(int time) {
+    return two_chars(time/1000/60) + ":" + two_chars((time%60000)/1000) + "." + QString::number(time%1000/100);
 }
 
 Level::Level(QWidget *parent, int level) {
@@ -37,27 +43,57 @@ Level::Level(QWidget *parent, int level) {
     setMouseTracking(true);
     setCursor(Qt::CrossCursor);
 
+    _scene = nullptr;
     _level = level;
+    _paused = false;
+
+    _time = 0;
+    _timer = nullptr;
+
+    _player = new QMediaPlayer;
+    _player->setVolume(100);
+    _playlist = new QMediaPlaylist;
 }
 
 void Level::load_scene() {
     _finished = false;
     _mode = nullptr;
 
+    if(_timer)
+        delete _timer;
+
+    if(_scene) {
+        _scene->clear();
+        delete _scene;
+    }
+
     _scene = new QGraphicsScene();
     setScene(_scene);
+
+    _timer = new QGraphicsTextItem(format(_time));
+    _timer->setPos(0, 0);
+    _timer->setDefaultTextColor(Qt::gray);
+    _timer->setTextWidth(width()/4);
+    _timer->setFont(QFont("Times", width() / 40));
 
     _scene->setSceneRect(0, 0, width(), height());
     _scene->setBackgroundBrush(QBrush(QImage(level_addr(_level, ".png")).scaledToWidth(width())));
 
+    _scene->addItem(_timer);
+
     _plate = new Plate();
     _plate->setFlag(QGraphicsItem::ItemIsFocusable);
     _scene->addItem(_plate);
-    _plate->setZValue(2);
 
     _ball = new Ball();
     _scene->addItem(_ball);
-    _ball->setZValue(1);
+
+    _playlist->clear();
+    _playlist->addMedia(QUrl(level_addr(_level, ".mp3", "", true)));
+    _playlist->setPlaybackMode(QMediaPlaylist::Loop);
+
+    _player->setPlaylist(_playlist);
+    _player->play();
 
     load_bricks();
     new Message(level_addr(_level+1, ".png", "level"));
@@ -104,7 +140,6 @@ void Level::load_bricks() {
     }
     file.close();
 }
-
 Level::~Level() {
     delete _mode;
     clean();
@@ -137,6 +172,20 @@ void Level::unfreeze() {
         (*it)->unfreeze();
 }
 
+
+void Level::add_time(int time) {
+    _time += time;
+    _timer->setPlainText(format(_time));
+}
+
+void Level::pause(bool paused) {
+    _paused = paused;
+}
+
+bool Level::paused() {
+    return _paused;
+}
+
 bool Level::solved() {
     return bricks().empty();
 }
@@ -144,6 +193,14 @@ bool Level::solved() {
 void Level::clean() {
     _finished = true;
     _scene->clear();
+
+    _timer = new QGraphicsTextItem(format(_time));
+    _timer->setPos(0, 0);
+    _timer->setDefaultTextColor(Qt::gray);
+    _timer->setTextWidth(width()/4);
+    _timer->setFont(QFont("Times", width() / 40));
+
+    _scene->addItem(_timer);
 }
 
 double Level::scaled(double x) {
@@ -162,19 +219,19 @@ void Level::next_level() {
 }
 
 void Level::mouseMoveEvent(QMouseEvent *event) {
-    if(!_finished) {
+    if(!_finished && !_paused) {
         _plate->move(event->x() - _plate->x());
         if(!_ball->is_active())
-            _ball->setPos(event->x() - _ball->r(), _ball->pos().y());
+            _ball->set_to_plate();
     }
 }
 
 void Level::mousePressEvent(QMouseEvent *event) {
     if(_finished)
         next_level();
-    else if(!_ball->is_active())
+    else if(!_ball->is_active() && !_paused)
         _ball->activate();
-    else if(mode_name() == Fire) {
+    else if(mode_name() == Fire && !_paused) {
         Bullet* bullet=new Bullet();
         _scene->addItem(bullet);
     }
@@ -183,6 +240,9 @@ void Level::mousePressEvent(QMouseEvent *event) {
 void Level::keyPressEvent(QKeyEvent *event) {
     if(event->key() == Qt::Key_Escape)
         parentWidget()->close();
+
+    if(!_finished && event->key() == Qt::Key_P)
+        pause(!paused());
 /*
     else if(_finished)
         return;

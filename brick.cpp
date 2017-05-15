@@ -13,6 +13,7 @@ Brick::Brick(QString pic_addr, double w, double h, double x, double y, QGraphics
     _height = h;
     setPixmap(QPixmap(pic_addr).scaled(w, h));
     setPos(x, y);
+    setZValue(1);
 
     _ice = nullptr;
 }
@@ -50,6 +51,7 @@ void Brick::create_ice() {
 
     _ice->setPixmap(QPixmap(level->yellow_brick_pic_address).scaled(_width+2, _height+3));
     _ice->setPos(x()-1, y());
+    _ice->setZValue(2);
     QGraphicsColorizeEffect *effect=new QGraphicsColorizeEffect;
     effect->setColor(QColor(20, 130, 150));
     _ice->setGraphicsEffect(effect);
