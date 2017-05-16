@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>sounds/decrease.wav</file>
+        <file>sounds/fire.wav</file>
+        <file>sounds/gunshot.wav</file>
+        <file>sounds/hit.wav</file>
+        <file>sounds/increase.wav</file>
+        <file>sounds/samurai.wav</file>
+        <file>sounds/speed.wav</file>
+        <file>sounds/sword.wav</file>
+        <file>sounds/winter.wav</file>
+    </qresource>
+</RCC>

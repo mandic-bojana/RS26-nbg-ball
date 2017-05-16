@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsPixmapItem>
+#include <QSound>
 
 extern Level *level;
 

@@ -39,10 +39,11 @@ FORMS    +=
 
 RESOURCES += \
     levels.qrc \
-    catfaces.qrc \
     modes.qrc \
     packages.qrc \
+    sounds.qrc \
+    levels_music.qrc \
     elements.qrc \
-    level_music.qrc
+    catfaces.qrc
 
 DISTFILES +=

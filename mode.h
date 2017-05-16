@@ -3,6 +3,7 @@
 
 #include "message.h"
 #include <QTimer>
+#include <QSound>
 
 class Mode: public QObject
 {
@@ -21,6 +22,7 @@ protected:
     Message* message;
     QString falling_item_pic_addr;
     QTimer* item_rain_timer;
+    QSound* sound;
 };
 
 class WinterMode : public Mode

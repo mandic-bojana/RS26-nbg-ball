@@ -1,6 +1,7 @@
 #include "package.h"
 #include "level.h"
 #include <QDebug>
+#include <QSound>
 
 extern Level* level;
 
@@ -46,18 +47,22 @@ DefaultModeActivate::DefaultModeActivate(double x, double y, QGraphicsItem *pare
     : Package(level->package_pic_address, x, y, parent) { }
 
 void IncreasePlateLength::upgrade() {
+    QSound::play(level->increase_sound);
     level->plate()->resize_length(level->scaled(level->default_plate_resize_length));
 }
 
 void DecreasePlateLength::upgrade() {
+    QSound::play(level->decrease_sound);
     level->plate()->resize_length(-level->scaled(level->default_plate_resize_length));
 }
 
 void IncreasePlateWidth::upgrade() {
+    QSound::play(level->increase_sound);
     level->plate()->resize_height(level->scaled(level->default_plate_resize_height));
 }
 
 void DecreasePlateWidth::upgrade() {
+    QSound::play(level->decrease_sound);
     level->plate()->resize_height(-level->scaled(level->default_plate_resize_height));
 }
 
@@ -66,6 +71,7 @@ void SamuraiModeActivate::upgrade() {
 }
 
 void WinterModeActivate::upgrade() {
+    level->ball()->set_cap();
     level->change_mode(Winter);
 }
 

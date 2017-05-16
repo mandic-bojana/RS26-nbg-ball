@@ -76,6 +76,7 @@ public:
     static const char* samurai_text_pic_address;
     static const char* fire_text_pic_address;
     static const char* speed_text_pic_address;
+    static const char* cap_pic_address;
 
     static const char* increase_plate_length_pic_address;
     static const char* decrease_plate_length_pic_address;
@@ -86,6 +87,16 @@ public:
     static const char* speed_candy_pic_address;
     static const char* pepper_pic_address;
     static const char* sushi_pic_address;
+
+    static const char* decrease_sound;
+    static const char* increase_sound;
+    static const char* hit_sound;
+    static const char* sword_sound;
+    static const char* fire_sound;
+    static const char* gunshot_sound;
+    static const char* samurai_sound;
+    static const char* speed_sound;
+    static const char* winter_sound;
 
     static const double default_ball_radius;
     static const double default_ball_speed;
