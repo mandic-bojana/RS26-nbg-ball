@@ -10,7 +10,7 @@ and
 
 ## Game information
 
-The basic idea of the game is based on [DX-Ball](https://en.wikipedia.org/wiki/DX-Ball "Wikipedia page") with all the ball/plate/brick/package interface. We had tried to implement that basic concept and improve it with some creative and interesting stuff.
+The basic idea of the game is based on [DX-Ball](https://en.wikipedia.org/wiki/DX-Ball "Wikipedia page") with all the ball/plate/brick/package interface. We tried to implement that basic concept and improve it with some creative and interesting stuff.
 
 ## Executable version
 
