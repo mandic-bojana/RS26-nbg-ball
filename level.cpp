@@ -12,7 +12,7 @@
 #include "mode.h"
 
 #define MAXLEN 100
-#define LEVELS_NO 5
+#define LEVELS_NO 6
 
 using namespace std;
 
@@ -51,7 +51,7 @@ Level::Level(QWidget *parent, int level) {
     _timer = nullptr;
 
     _player = new QMediaPlayer;
-    _player->setVolume(100);
+    _player->setVolume(70);
     _playlist = new QMediaPlaylist;
 }
 
@@ -305,8 +305,10 @@ ModeName Level::mode_name() {
 }
 
 void Level::change_mode(ModeName mode_name) {
-    _mode->reset();
-    delete _mode;
+/*    if(_mode != nullptr) {
+     _mode->reset();
+     delete _mode;
+    } */
     switch (mode_name) {
     case Winter:
         _mode = new WinterMode();
@@ -327,6 +329,8 @@ void Level::change_mode(ModeName mode_name) {
         break;
     }
     _ball->move_eyes();
+    if(_mode)
+        _mode->play_sound();
 }
 
 const char* Level::plate_pic_address = ":/images/plate.png";
@@ -351,6 +355,7 @@ const char* Level::catface_samurai_left_pic_address = ":/images/catface_samurai_
 const char* Level::catface_samurai_right_pic_address = ":/images/catface_samurai_right.png";
 const char* Level::catface_speed_pic_address = ":/images/catface_speed.png";
 const char* Level::catface_speed_blink_pic_address = ":/images/catface_speed_blink.png";
+const char* Level::cap_pic_address = ":/images/cap.png";
 
 const char* Level::snowflake_pic_address = ":/images/snowflake.png";
 const char* Level::speed_pic_address = ":/images/speed.png";
@@ -370,6 +375,16 @@ const char* Level::ice_cream_pic_address = ":/images/ice_cream.png";
 const char* Level::sushi_pic_address = ":/images/sushi.png";
 const char* Level::speed_candy_pic_address = ":/images/speed_candy.png";
 const char* Level::pepper_pic_address = ":/images/pepper.png";
+
+const char* Level::decrease_sound = ":/sounds/decrease.wav";
+const char* Level::increase_sound = ":/sounds/increase.wav";
+const char* Level::hit_sound = ":/sounds/hit.wav";
+const char* Level::sword_sound = ":/sounds/sword.wav";
+const char* Level::fire_sound = ":/sounds/fire.wav";
+const char* Level::gunshot_sound = ":/sounds/gunshot.wav";
+const char* Level::samurai_sound = ":/sounds/samurai.wav";
+const char* Level::speed_sound = ":/sounds/speed.wav";
+const char* Level::winter_sound = ":/sounds/winter.wav";
 
 const double Level::default_ball_timer_interval = 7;
 const double Level::default_ball_angle = 1.2;

@@ -6,6 +6,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsItem>
 #include <QTimer>
+#include <QSoundEffect>
 #include <math.h>
 #include "brick.h"
 
@@ -51,6 +52,8 @@ public:
 public slots:
     void move();    
     void move_eyes();
+    void set_cap();
+    void remove_cap();
 
 private:
     double _interval;
@@ -62,11 +65,13 @@ private:
     bool _active;
     QTimer *_timer;
     QTimer *_eyes_timer;
+    QSoundEffect * _sound;
     QVector<QPixmap> catface_images;
     QVector<QPixmap> catface_samurai_images;
     QPixmap catface_blink_image;
     QPixmap catface_speed_image;
     QPixmap catface_speed_blink_image;
+    QGraphicsPixmapItem * _cap;
 };
 
 #endif // BALL_H

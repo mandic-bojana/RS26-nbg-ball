@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QDebug>
 #include <math.h>
+#include <QSound>
 
 extern Level *level;
 
@@ -20,6 +21,7 @@ Bullet::Bullet(QGraphicsItem* parent)
     QTimer* timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
     timer->start(level->default_bullet_timer_interval);
+    QSound::play(level->gunshot_sound);
 }
 
 Bullet::Bullet(int x, int y, double angle, QGraphicsItem *parent)
@@ -45,6 +47,7 @@ void Bullet::move() {
         if(collidesWithItem(*it)) {
             Brick* brick = (Brick*)*it;
             brick->hit();
+            QSound::play(level->hit_sound);
             hit = true;
         }
     }

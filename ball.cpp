@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <typeinfo>
 #include <QTransform>
+#include <QSound>
 
 using namespace std;
 
@@ -137,10 +138,14 @@ void Ball::move() {
     for(;it != it_end; it++) {
         Brick* brick = *it;
         if(collidesWithItem(brick)) {
-            if(level->mode_name() == Samurai)
+            if(level->mode_name() == Samurai) {
+                QSound::play(level->sword_sound);
                 brick->hit();
-            else if(bounce_brick(brick))
+            }
+            else if(bounce_brick(brick)) {
+                QSound::play(level->hit_sound);
                 brick->hit();
+            }
             blink();
         }
     }
@@ -256,4 +261,14 @@ void Ball::move_eyes() {
         setPixmap(catface_samurai_images[qrand()%3]);
     else
         setPixmap(catface_images[qrand()%5]);
+}
+
+
+void Ball::set_cap() {
+    _cap = new QGraphicsPixmapItem(QPixmap(level->cap_pic_address).scaled(2*_r, 2*_r), this);
+}
+
+void Ball::remove_cap() {
+    if(_cap)
+        delete _cap;
 }

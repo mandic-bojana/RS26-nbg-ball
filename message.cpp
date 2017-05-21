@@ -35,8 +35,9 @@ Message::~Message() {
 
 void Message::disappear() {
     setOpacity(opacity() - 0.01);
-    if(opacity() <= 0)
+    if(opacity() <= 0) {
         delete this;
+    }
 }
 
 QTimer *Message::timer() {

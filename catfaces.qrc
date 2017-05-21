@@ -11,5 +11,6 @@
         <file>images/catface_speed.png</file>
         <file>images/catface_speed_blink.png</file>
         <file>images/catface_up.png</file>
+        <file>images/cap.png</file>
     </qresource>
 </RCC>

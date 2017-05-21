@@ -3,6 +3,7 @@
 
 #include "message.h"
 #include <QTimer>
+#include <QSound>
 
 class Mode: public QObject
 {
@@ -12,6 +13,7 @@ public:
     ~Mode();
 
     void reset();
+    virtual void play_sound() = 0;
 
 public slots:
     void item_rain();
@@ -21,6 +23,7 @@ protected:
     Message* message;
     QString falling_item_pic_addr;
     QTimer* item_rain_timer;
+    QSound* sound;
 };
 
 class WinterMode : public Mode
@@ -28,6 +31,7 @@ class WinterMode : public Mode
     Q_OBJECT
 public:
     WinterMode();
+    void play_sound();
 
 public slots:
     void freeze();
@@ -38,6 +42,7 @@ class SamuraiMode : public Mode
     Q_OBJECT
 public:
     SamuraiMode();
+    void play_sound();
 };
 
 class FireMode : public Mode
@@ -45,6 +50,7 @@ class FireMode : public Mode
     Q_OBJECT
 public:
     FireMode();
+    void play_sound();
 };
 
 class SpeedMode : public Mode
@@ -52,6 +58,7 @@ class SpeedMode : public Mode
     Q_OBJECT
 public:
     SpeedMode();
+    void play_sound();
 };
 
 #endif // MODE_H
