@@ -26,6 +26,7 @@ public:
 
     Plate* plate();
     Ball* ball();
+    Mode* mode();
     QList<Brick*> bricks();
 
     ModeName mode_name();

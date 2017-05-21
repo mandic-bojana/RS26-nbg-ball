@@ -240,10 +240,10 @@ void Level::mousePressEvent(QMouseEvent *event) {
 void Level::keyPressEvent(QKeyEvent *event) {
     if(event->key() == Qt::Key_Escape)
         parentWidget()->close();
-/*
+
     if(!_finished && event->key() == Qt::Key_P)
         pause(!paused());
-
+/*
     else if(_finished)
         return;
     else switch(event->key()) {
@@ -305,10 +305,10 @@ ModeName Level::mode_name() {
 }
 
 void Level::change_mode(ModeName mode_name) {
-       if(_mode) {
-        _mode->reset();
-        delete _mode;
-       }
+/*    if(_mode != nullptr) {
+     _mode->reset();
+     delete _mode;
+    } */
     switch (mode_name) {
     case Winter:
         _mode = new WinterMode();
@@ -329,6 +329,8 @@ void Level::change_mode(ModeName mode_name) {
         break;
     }
     _ball->move_eyes();
+    if(_mode)
+        _mode->play_sound();
 }
 
 const char* Level::plate_pic_address = ":/images/plate.png";

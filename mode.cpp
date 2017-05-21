@@ -18,8 +18,9 @@ Mode::Mode(const QString &message_pic_addr, const QString &falling_item_pic_addr
 }
 
 Mode::~Mode() {
-    delete sound;
-    delete message;
+    if(sound) {
+        delete sound;
+    }
     delete item_rain_timer;
 }
 
@@ -41,8 +42,10 @@ void Mode::stop_initializing_effect() {
 }
 
 SamuraiMode::SamuraiMode()
-    : Mode(level->samurai_text_pic_address, level->flower_pic_address) {
+    : Mode(level->samurai_text_pic_address, level->flower_pic_address) { }
 
+void SamuraiMode::play_sound()
+{
     sound = new QSound(level->samurai_sound);
     sound->play();
 }
@@ -50,17 +53,18 @@ SamuraiMode::SamuraiMode()
 FireMode::FireMode()
     : Mode(level->fire_text_pic_address, level->flame_pic_address) {
 
-    sound = new QSound(level->fire_sound);
-    sound->play();
     level->plate()->set_on_fire(true);
 }
 
+void FireMode::play_sound()
+{
+    sound = new QSound(level->fire_sound);
+    sound->play();
+}
+
+
 WinterMode::WinterMode()
     : Mode(level->winter_text_pic_address, level->snowflake_pic_address) {
-
-
-    sound = new QSound(level->winter_sound);
-    sound->play();
 
     QList<Brick*> bricks = level->bricks();
     QList<Brick*>::iterator it = bricks.begin();
@@ -70,13 +74,24 @@ WinterMode::WinterMode()
     QObject::connect(message->timer(), SIGNAL(timeout()), this, SLOT(freeze()));
 }
 
+void WinterMode::play_sound()
+{
+    sound = new QSound(level->winter_sound);
+    sound->play();
+}
+
 SpeedMode::SpeedMode()
     : Mode(level->speed_text_pic_address, level->speed_pic_address) {
 
-    sound = new QSound(level->speed_sound);
-    sound->play();
     level->ball()->set_speed_mode();
 }
+
+void SpeedMode::play_sound()
+{
+    sound = new QSound(level->speed_sound);
+    sound->play();
+}
+
 
 void WinterMode::freeze() {
     QList<Brick*> bricks = level->bricks();
