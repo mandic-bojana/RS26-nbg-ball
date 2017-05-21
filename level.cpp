@@ -305,10 +305,10 @@ ModeName Level::mode_name() {
 }
 
 void Level::change_mode(ModeName mode_name) {
-/*    if(_mode != nullptr) {
+    if(_mode != nullptr) {
      _mode->reset();
      delete _mode;
-    } */
+    }
     switch (mode_name) {
     case Winter:
         _mode = new WinterMode();
