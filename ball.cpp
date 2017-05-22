@@ -19,6 +19,7 @@ Ball::Ball(QGraphicsItem *parent)
     _angle = level->default_ball_angle;
     _speed = level->scaled(level->default_ball_speed);
     _speed_speed = level->scaled(level->default_speed_ball_speed);
+    _acceleration = 1;
     _active = false;
 
     setPixmap(QPixmap(level->catface_pic_address).scaled(2*_r, 2*_r));
@@ -48,6 +49,8 @@ Ball::Ball(QGraphicsItem *parent)
 
     catface_speed_image = QPixmap(level->catface_speed_pic_address).scaled(2*_speed_r, 2*_speed_r);
     catface_speed_blink_image = QPixmap(level->catface_speed_blink_pic_address).scaled(2*_speed_r, 2*_speed_r);
+
+    _cap = nullptr;
 }
 
 Ball::~Ball() {
@@ -61,12 +64,16 @@ void Ball::set_to_plate() {
 
 void Ball::reset() {
     setTransform(QTransform());
-    setPos(pos().x() + _speed_r - _r, pos().y() + _speed_r - _r);//, 2*_r, 2*_r);
+    setPos(pos().x() + _speed_r - _r, pos().y() + _speed_r - _r);
+}
+
+void Ball::reset_acceleration() {
+    _acceleration = 1;
 }
 
 void Ball::set_speed_mode() {
     setTransform(QTransform());
-    setPos(pos().x() - _speed_r + _r, pos().y() - _speed_r + _r);//, 2*_speed_r, 2*_speed_r);
+    setPos(pos().x() - _speed_r + _r, pos().y() - _speed_r + _r);
 }
 
 void Ball::blink() {
@@ -110,7 +117,7 @@ void Ball::move() {
 
     level->add_time(_timer->interval());
 
-    setPos(pos().x() + speed() * cos(_angle), pos().y() - speed() * sin(_angle));
+    setPos(pos().x() + _acceleration * speed() * cos(_angle), pos().y() - _acceleration * speed() * sin(_angle));
 
     QTransform matrix;
     matrix.translate(r(), r());
@@ -150,9 +157,8 @@ void Ball::move() {
         }
     }
 
-    if(_timer->interval() > level->min_ball_timer_interval) {
-        _interval -= 0.0001;
-        _timer->setInterval(_interval);
+    if(_acceleration < level->max_ball_acceleration) {
+        _acceleration += level->default_ball_acceleration;
     }
 
     if(level->solved())
@@ -194,6 +200,8 @@ void Ball::bounce(double alpha) {
         _angle += 2 * M_PI;
     if(_angle > 2 * M_PI)
         _angle -= 2 * M_PI;
+    if(_angle < level->min_ball_angle)
+        _angle = level->min_ball_angle;
 }
 
 void Ball::bounce_vertical() {
@@ -271,4 +279,5 @@ void Ball::set_cap() {
 void Ball::remove_cap() {
     if(_cap)
         delete _cap;
+    _cap = nullptr;
 }
