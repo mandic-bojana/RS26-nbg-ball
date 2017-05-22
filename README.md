@@ -19,7 +19,7 @@ The basic idea of the game is based on [DX-Ball](https://en.wikipedia.org/wiki/D
 
 ## Power ups/downs
 
-| Package image | Effect when cought |
+| Package image | Effect when caught |
 |---------------|--------------------|
 | <img src="../master/images/plate_increase_height.png" width="50" align = "middle"> | Increases plate height. |
 | <img src="../master/images/plate_decrease_height.png" width="50" align = "middle"> | Decreases plate height. |
