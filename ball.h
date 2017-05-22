@@ -47,6 +47,7 @@ public:
     void blink();
 
     void reset();
+    void reset_acceleration();
     void set_speed_mode();
 
 public slots:
@@ -62,6 +63,7 @@ private:
     double _angle;
     double _speed;
     double _speed_speed;
+    double _acceleration;
     bool _active;
     QTimer *_timer;
     QTimer *_eyes_timer;

@@ -208,6 +208,7 @@ double Level::scaled(double x) {
 }
 
 void Level::repeat_level() {
+    _ball->reset_acceleration();
     load_scene();
 }
 
@@ -243,7 +244,7 @@ void Level::keyPressEvent(QKeyEvent *event) {
 
     if(!_finished && event->key() == Qt::Key_P)
         pause(!paused());
-/*
+
     else if(_finished)
         return;
     else switch(event->key()) {
@@ -287,7 +288,7 @@ void Level::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_B:
         change_mode(Default);
         break;
-    }*/
+    }
 }
 
 ModeName Level::mode_name() {
@@ -305,10 +306,10 @@ ModeName Level::mode_name() {
 }
 
 void Level::change_mode(ModeName mode_name) {
-/*    if(_mode != nullptr) {
+    if(_mode) {
      _mode->reset();
      delete _mode;
-    } */
+    }
     switch (mode_name) {
     case Winter:
         _mode = new WinterMode();
@@ -325,6 +326,7 @@ void Level::change_mode(ModeName mode_name) {
     case Default:
     default:
         _mode = nullptr;
+        _ball->reset_acceleration();
         unfreeze();
         break;
     }
@@ -411,8 +413,11 @@ const double Level::default_fallingitem_speed = 8;
 const double Level::default_message_width = 400;
 const double Level::default_message_height = 150;
 
-const double Level::min_ball_timer_interval = 5;
+const double Level::min_ball_angle = M_PI / 36;
 const double Level::max_plate_excess = 60;
 const double Level::max_plate_length = 400;
 const double Level::min_plate_excess = 20;
 const double Level::min_plate_length = 80;
+const double Level::max_ball_acceleration = 1.5;
+const double Level::default_ball_acceleration = (Level::max_ball_acceleration - 1)/(120000/Level::default_ball_timer_interval);
+

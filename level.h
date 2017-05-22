@@ -103,6 +103,7 @@ public:
     static const double default_ball_speed;
     static const double default_ball_angle;
     static const double default_ball_timer_interval;
+    static const double default_ball_acceleration;
     static const double default_speed_ball_radius;
     static const double default_speed_ball_speed;
     static const double default_bullet_radius;
@@ -123,7 +124,8 @@ public:
     static const double default_message_width;
     static const double default_message_height;
 
-    static const double min_ball_timer_interval;
+    static const double max_ball_acceleration;
+    static const double min_ball_angle;
     static const double max_plate_excess;
     static const double max_plate_length;
     static const double min_plate_excess;
