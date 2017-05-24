@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
         w = (double)h*4/3;
     }
 
-    level = new Level(&window, 5);
+    level = new Level(&window);
     level->setGeometry(x, y, w, h);
     level->load_scene();
 
