@@ -11,6 +11,8 @@ Score::Score(QWidget *parent) :
     _url->setUserName("simkers");
     _url->setPassword("3EAM2Q4d");
 
+    _error = false;
+
     _file = nullptr;
     _scoreboard = nullptr;
     _download_reply = nullptr;
@@ -60,6 +62,11 @@ void Score::download() {
 }
 
 void Score::download_finished() {
+    if(_error) {
+        if(!_upload)
+            reject();
+        return;
+    }
     char s[1000];
     _download_reply->read(s, 1000);
     QString file(s);
@@ -103,7 +110,7 @@ void Score::save_to_file() {
 
     for(int i = 0; i < 10 && it != it_end; i++, it++) {
         QString line = *it + "\n";
-        _file->write(line.toLatin1().data(), (*it).length()+1);
+        _file->write(line.toUtf8().data(), (*it).length()+1);
     }
     _file->close();
 }
@@ -121,14 +128,18 @@ void Score::upload() {
 
 void Score::upload_finished() {
     _file->close();
-    level->scoreboard_show();
-    accept();
+    if(!_error) {
+        level->scoreboard_show();
+        accept();
+    }
 }
 
 void Score::error(QNetworkReply::NetworkError x) {
+    _manager->disconnect();
     _message = new QMessageBox;
-    _message->setText("Pao alas. -_ -\n" + x);
+    _message->setText("Pao alas. :P");
     _message->show();
+    _error = true;
 }
 
 void Score::progress(qint64 x, qint64 y) {

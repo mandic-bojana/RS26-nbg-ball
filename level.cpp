@@ -53,7 +53,7 @@ Level::Level(QWidget *parent, int level) {
     _scoreboard = nullptr;
 
     _player = new QMediaPlayer;
-    _player->setVolume(70);
+    _player->setVolume(0);
     _playlist = new QMediaPlaylist;
 }
 
@@ -287,7 +287,7 @@ void Level::keyPressEvent(QKeyEvent *event) {
 
     if(!_finished && event->key() == Qt::Key_P)
         pause(!paused());
-
+/*
     if(event->key() == Qt::Key_Enter)
         clean();
 
@@ -334,7 +334,7 @@ void Level::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_B:
         change_mode(Default);
         break;
-    }
+    }*/
 }
 
 ModeName Level::mode_name() {

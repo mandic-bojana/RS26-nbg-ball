@@ -35,6 +35,7 @@ private:
     void save_to_file();
 
     bool _upload;
+    bool _error;
 
     Ui::Score *ui;
     QMessageBox *_message;
