@@ -4,8 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui multimedia
-QMAKE_CXXFLAGS += -std=c++0x
+QT              += core gui multimedia network
+QMAKE_CXXFLAGS  += -std=c++0x
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     message.cpp \
     fallingitem.cpp \
     mode.cpp \
-    package.cpp
+    package.cpp \
+    score.cpp
 
 HEADERS  += \
     level.h \
@@ -33,9 +34,11 @@ HEADERS  += \
     message.h \
     fallingitem.h \
     mode.h \
-    package.h
+    package.h \
+    score.h
 
-FORMS    +=
+FORMS    += \
+    score.ui
 
 RESOURCES += \
     levels.qrc \

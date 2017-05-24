@@ -13,6 +13,7 @@
 #include "brick.h"
 #include "ball.h"
 #include "mode.h"
+#include "score.h"
 
 using namespace std;
 
@@ -36,12 +37,16 @@ public:
     void load_bricks();
 
     void add_time(int time);
+    int get_time();
+
     void pause(bool paused = true);
     bool paused();
     bool solved();
     void clean();
     void next_level();
     void repeat_level();
+    void the_end();
+    void scoreboard_show();
 
     void unfreeze();
 
@@ -133,22 +138,26 @@ public:
 
 public slots:
     void mouseMoveEvent(QMouseEvent* event);
-    void mousePressEvent(QMouseEvent* event);
+    void mousePressEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
 
 private:
+    QGraphicsScene *_scene;
+
     QMediaPlaylist *_playlist;
     QMediaPlayer *_player;
-    QGraphicsScene *_scene;
-    Plate *_plate;
-    Ball *_ball;
-    int _level;
-    bool _finished;
-    Mode* _mode;
-    bool _paused;
-
+    Score *_scorebox;
     QGraphicsTextItem *_timer;
     int _time;
+    QGraphicsTextItem *_scoreboard;
+
+    Mode* _mode;
+    Plate *_plate;
+    Ball *_ball;
+
+    int _level;
+    bool _finished;
+    bool _paused;
 
     int bricks_row;
     int bricks_column;

@@ -49,6 +49,8 @@ Level::Level(QWidget *parent, int level) {
 
     _time = 0;
     _timer = nullptr;
+    _scorebox = nullptr;
+    _scoreboard = nullptr;
 
     _player = new QMediaPlayer;
     _player->setVolume(70);
@@ -141,6 +143,8 @@ void Level::load_bricks() {
     file.close();
 }
 Level::~Level() {
+    delete _scoreboard;
+    delete _scorebox;
     delete _mode;
     clean();
 }
@@ -176,6 +180,10 @@ void Level::unfreeze() {
 void Level::add_time(int time) {
     _time += time;
     _timer->setPlainText(format(_time));
+}
+
+int Level::get_time() {
+    return _time;
 }
 
 void Level::pause(bool paused) {
@@ -216,7 +224,38 @@ void Level::next_level() {
     if(++_level < LEVELS_NO)
         load_scene();
     else
-        parentWidget()->close();
+        the_end();
+}
+
+void Level::the_end() {
+    if(_scoreboard)
+        return;
+    if(!_scorebox)
+        _scorebox = new Score(this);
+    _scorebox->setFixedSize(_scorebox->size());
+    _scorebox->show();
+}
+
+void Level::scoreboard_show() {
+    QFile scoreboard("scoreboard.nbg");
+    scoreboard.open(QIODevice::ReadOnly);
+    QString text;
+
+    char line[200];
+    for(int i=0; i<10 && scoreboard.readLine(line, 200); i++) {
+        if(QString(line).indexOf("\\") < 0)
+            continue;
+        QStringList score = QString(line).split("\\");
+        QString name;
+        name.sprintf("%20s", score[0].toLatin1().data());
+        text += QString::number(i+1) + ")\t" + name + "\t\t\t" + format(score[1].toInt()) + "\n";
+    }
+
+    scoreboard.close();
+
+    _scoreboard = new QGraphicsTextItem(text);
+    _scoreboard->setFont(QFont("Times", width() / 40));
+    _scene->addItem(_scoreboard);
 }
 
 void Level::mouseMoveEvent(QMouseEvent *event) {
@@ -244,6 +283,9 @@ void Level::keyPressEvent(QKeyEvent *event) {
 
     if(!_finished && event->key() == Qt::Key_P)
         pause(!paused());
+
+    if(event->key() == Qt::Key_Enter)
+        clean();
 
     else if(_finished)
         return;

@@ -18,9 +18,7 @@ Mode::Mode(const QString &message_pic_addr, const QString &falling_item_pic_addr
 }
 
 Mode::~Mode() {
-    if(sound) {
-        delete sound;
-    }
+    delete sound;
     delete item_rain_timer;
 }
 
