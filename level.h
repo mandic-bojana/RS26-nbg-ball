@@ -136,6 +136,8 @@ public:
     static const double min_plate_excess;
     static const double min_plate_length;
 
+    static const char* scoreboard_file_name;
+
 public slots:
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent *event);

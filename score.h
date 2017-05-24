@@ -26,9 +26,15 @@ private slots:
     void download_finished();
     void upload_finished();
 
+    void on_buttonBox_rejected();
+
 private:
     void download();
     void upload();
+    void insert_result();
+    void save_to_file();
+
+    bool _upload;
 
     Ui::Score *ui;
     QMessageBox *_message;

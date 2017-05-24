@@ -7,7 +7,7 @@ extern Level *level;
 Score::Score(QWidget *parent) :
     QDialog(parent), ui(new Ui::Score) {
 
-    _url = new QUrl("ftp://files.000webhost.com/scoreboard.nbg");
+    _url = new QUrl("ftp://files.000webhost.com/" + QString(level->scoreboard_file_name));
     _url->setUserName("simkers");
     _url->setPassword("3EAM2Q4d");
 
@@ -37,6 +37,16 @@ void Score::on_buttonBox_accepted() {
 
     ui->label->setText("Download");
     ui->progressBar->setEnabled(true);
+
+    _upload = true;
+    download();
+}
+
+void Score::on_buttonBox_rejected() {
+    ui->label->setText("Download");
+    ui->progressBar->setEnabled(true);
+
+    _upload = false;
     download();
 }
 
@@ -49,26 +59,31 @@ void Score::download() {
     QObject::connect(_download_reply, SIGNAL(finished()), this, SLOT(download_finished()));
 }
 
-void Score::error(QNetworkReply::NetworkError x) {
-    _message = new QMessageBox;
-    _message->setText("Pao alas. -_ -\n" + x);
-    _message->show();
-}
-
-void Score::progress(qint64 x, qint64 y) {
-    ui->progressBar->setValue((double)x/y*100);
-}
-
 void Score::download_finished() {
     char s[1000];
     _download_reply->read(s, 1000);
     QString file(s);
 
     _scoreboard = new QStringList(file.split("\n"));
+
+    if(_upload)
+        insert_result();
+
+    save_to_file();
+
+    if(_upload)
+        upload();
+    else {
+        level->scoreboard_show();
+        reject();
+    }
+}
+
+void Score::insert_result() {
     QStringList::iterator it = _scoreboard->begin();
     QStringList::iterator it_end = _scoreboard->end();
 
-    for(; it != it_end; it++) {
+    for(int i=0; i<10 && it != it_end; i++, it++) {
         QStringList name = (*it).split("\\");
         if(_time < name[1].toInt()) {
             _scoreboard->insert(it, *_name + "\\" + QString::number(_time));
@@ -77,23 +92,24 @@ void Score::download_finished() {
     }
     if(it == it_end)
         _scoreboard->insert(it, *_name + QString::number(_time));
-
-    ui->label->setText("Upload");
-    upload();
 }
 
-void Score::upload() {
-    _file = new QFile("scoreboard.nbg");
+void Score::save_to_file() {
+    _file = new QFile(level->scoreboard_file_name);
     _file->open(QIODevice::WriteOnly);
 
     QStringList::iterator it = _scoreboard->begin();
     QStringList::iterator it_end = _scoreboard->end();
 
-    for(; it != it_end; it++) {
+    for(int i = 0; i < 10 && it != it_end; i++, it++) {
         QString line = *it + "\n";
-        _file->write(line.toLatin1().data());
+        _file->write(line.toLatin1().data(), (*it).length()+1);
     }
     _file->close();
+}
+
+void Score::upload() {
+    ui->label->setText("Upload");
 
     _file->open(QIODevice::ReadOnly);
     _upload_reply = _manager->put(QNetworkRequest(*_url), _file->readAll());
@@ -107,4 +123,14 @@ void Score::upload_finished() {
     _file->close();
     level->scoreboard_show();
     accept();
+}
+
+void Score::error(QNetworkReply::NetworkError x) {
+    _message = new QMessageBox;
+    _message->setText("Pao alas. -_ -\n" + x);
+    _message->show();
+}
+
+void Score::progress(qint64 x, qint64 y) {
+    ui->progressBar->setValue((double)x/y*100);
 }

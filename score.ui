@@ -48,6 +48,18 @@
      <bold>true</bold>
     </font>
    </property>
+   <property name="inputMask">
+    <string/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="maxLength">
+    <number>20</number>
+   </property>
+   <property name="placeholderText">
+    <string extracomment="Type your name..."/>
+   </property>
   </widget>
   <widget class="QProgressBar" name="progressBar">
    <property name="enabled">
@@ -88,22 +100,5 @@
   </widget>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>Score</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>330</x>
-     <y>140</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>194</x>
-     <y>56</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

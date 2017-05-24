@@ -237,24 +237,28 @@ void Level::the_end() {
 }
 
 void Level::scoreboard_show() {
-    QFile scoreboard("scoreboard.nbg");
+    QFile scoreboard(scoreboard_file_name);
     scoreboard.open(QIODevice::ReadOnly);
-    QString text;
+    QString text("Hall of Fame:\n\n");
 
     char line[200];
-    for(int i=0; i<10 && scoreboard.readLine(line, 200); i++) {
+    for(int i = 0; i < 10 && scoreboard.readLine(line, 200); i++) {
         if(QString(line).indexOf("\\") < 0)
             continue;
         QStringList score = QString(line).split("\\");
-        QString name;
-        name.sprintf("%20s", score[0].toLatin1().data());
-        text += QString::number(i+1) + ")\t" + name + "\t\t\t" + format(score[1].toInt()) + "\n";
+        QString rank = (QString::number(i+1) + ")").leftJustified(4, ' ');
+        QString name = score[0].leftJustified(20, '.');
+        QString time = format(score[1].toInt());
+        text += rank + name + time + "\n";
     }
-
     scoreboard.close();
 
     _scoreboard = new QGraphicsTextItem(text);
-    _scoreboard->setFont(QFont("Times", width() / 40));
+    QFont font("Times", width() / 40, QFont::Bold);
+    font.setFixedPitch(true);
+    _scoreboard->setFont(font);
+    _scoreboard->setDefaultTextColor(Qt::darkGray);
+    _scoreboard->setPos((width() - _scoreboard->boundingRect().width()) / 2, (height() - _scoreboard->boundingRect().height()) / 2);
     _scene->addItem(_scoreboard);
 }
 
@@ -462,4 +466,6 @@ const double Level::min_plate_excess = 20;
 const double Level::min_plate_length = 80;
 const double Level::max_ball_acceleration = 1.5;
 const double Level::default_ball_acceleration = (Level::max_ball_acceleration - 1)/(120000/Level::default_ball_timer_interval);
+
+const char* Level::scoreboard_file_name = "scoreboard.nbg";
 
