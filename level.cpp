@@ -53,7 +53,7 @@ Level::Level(QWidget *parent, int level) {
     _scoreboard = nullptr;
 
     _player = new QMediaPlayer;
-    _player->setVolume(0);
+    _player->setVolume(50);
     _playlist = new QMediaPlaylist;
 }
 
