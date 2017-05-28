@@ -49,9 +49,11 @@ Level::Level(QWidget *parent, int level) {
 
     _time = 0;
     _timer = nullptr;
+    _scorebox = nullptr;
+    _scoreboard = nullptr;
 
     _player = new QMediaPlayer;
-    _player->setVolume(70);
+    _player->setVolume(50);
     _playlist = new QMediaPlaylist;
 }
 
@@ -141,6 +143,8 @@ void Level::load_bricks() {
     file.close();
 }
 Level::~Level() {
+    delete _scoreboard;
+    delete _scorebox;
     delete _mode;
     clean();
 }
@@ -176,6 +180,10 @@ void Level::unfreeze() {
 void Level::add_time(int time) {
     _time += time;
     _timer->setPlainText(format(_time));
+}
+
+int Level::get_time() {
+    return _time;
 }
 
 void Level::pause(bool paused) {
@@ -216,7 +224,42 @@ void Level::next_level() {
     if(++_level < LEVELS_NO)
         load_scene();
     else
-        parentWidget()->close();
+        the_end();
+}
+
+void Level::the_end() {
+    if(_scoreboard)
+        return;
+    if(!_scorebox)
+        _scorebox = new Score(this);
+    _scorebox->setFixedSize(_scorebox->size());
+    _scorebox->show();
+}
+
+void Level::scoreboard_show() {
+    QFile scoreboard(scoreboard_file_name);
+    scoreboard.open(QIODevice::ReadOnly);
+    QString text("Hall of Fame:\n\n");
+
+    char line[200];
+    for(int i = 0; i < 10 && scoreboard.readLine(line, 200); i++) {
+        if(QString(line).indexOf("\\") < 0)
+            continue;
+        QStringList score = QString(line).split("\\");
+        QString rank = (QString::number(i+1) + ")").leftJustified(4, ' ');
+        QString name = score[0].leftJustified(20, '.');
+        QString time = format(score[1].toInt());
+        text += rank + name + time + "\n";
+    }
+    scoreboard.close();
+
+    _scoreboard = new QGraphicsTextItem(text);
+    QFont font("Times", width() / 40, QFont::Bold);
+    font.setFixedPitch(true);
+    _scoreboard->setFont(font);
+    _scoreboard->setDefaultTextColor(Qt::darkGray);
+    _scoreboard->setPos((width() - _scoreboard->boundingRect().width()) / 2, (height() - _scoreboard->boundingRect().height()) / 2);
+    _scene->addItem(_scoreboard);
 }
 
 void Level::mouseMoveEvent(QMouseEvent *event) {
@@ -244,6 +287,9 @@ void Level::keyPressEvent(QKeyEvent *event) {
 
     if(!_finished && event->key() == Qt::Key_P)
         pause(!paused());
+/*
+    if(event->key() == Qt::Key_Enter)
+        clean();
 
     else if(_finished)
         return;
@@ -288,7 +334,7 @@ void Level::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_B:
         change_mode(Default);
         break;
-    }
+    }*/
 }
 
 ModeName Level::mode_name() {
@@ -420,4 +466,6 @@ const double Level::min_plate_excess = 20;
 const double Level::min_plate_length = 80;
 const double Level::max_ball_acceleration = 1.5;
 const double Level::default_ball_acceleration = (Level::max_ball_acceleration - 1)/(120000/Level::default_ball_timer_interval);
+
+const char* Level::scoreboard_file_name = "scoreboard.nbg";
 

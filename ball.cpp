@@ -274,6 +274,7 @@ void Ball::move_eyes() {
 
 void Ball::set_cap() {
     _cap = new QGraphicsPixmapItem(QPixmap(level->cap_pic_address).scaled(2*_r, 2*_r), this);
+    _cap->setZValue(zValue() + 1);
 }
 
 void Ball::remove_cap() {
