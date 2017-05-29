@@ -15,7 +15,7 @@ The basic idea of the game is based on [DX-Ball](https://en.wikipedia.org/wiki/D
 ## Executable version
 
 + [Windows](https://drive.google.com/file/d/0BxGBdOFgPwOyV3l3c25ObDVUdkk/view "Download")
-+ [Linux](https://drive.google.com/drive/u/0/folders/0B2h63NSzirEgY1J4TzQ1TS15SVk "Download")
++ [Linux](https://drive.google.com/file/d/0B2h63NSzirEgT3ZlcHFJUDhhSkU/view?usp=sharing "Download")
 
 ## Power ups/downs
 
