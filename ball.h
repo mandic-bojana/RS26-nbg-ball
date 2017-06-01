@@ -74,6 +74,9 @@ private:
     QPixmap catface_speed_image;
     QPixmap catface_speed_blink_image;
     QGraphicsPixmapItem * _cap;
+
+    double d2(QPointF A, QPointF B);
+    double d(QPointF A, QPointF B);
 };
 
 #endif // BALL_H

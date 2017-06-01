@@ -164,6 +164,10 @@ private:
     int bricks_row;
     int bricks_column;
     int bricks_space;
+
+    QString level_addr(int i, QString extension = ".nbg", QString prefix = "", bool qrc = false);
+    QString two_chars(int num);
+    QString format(int time);
 };
 
 #endif // LEVEL_H

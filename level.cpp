@@ -16,7 +16,7 @@
 
 using namespace std;
 
-QString level_addr(int i, QString extension = ".nbg", QString prefix = "", bool qrc = false) {
+QString Level::level_addr(int i, QString extension, QString prefix, bool qrc) {
     QString addr(":/levels/");
     if(qrc)
         addr = "qrc" + addr;
@@ -26,11 +26,11 @@ QString level_addr(int i, QString extension = ".nbg", QString prefix = "", bool 
     return addr;
 }
 
-QString two_chars(int num) {
+QString Level::two_chars(int num) {
     return (num<10 ? "0" : "") + QString::number(num);
 }
 
-QString format(int time) {
+QString Level::format(int time) {
     return two_chars(time/1000/60) + ":" + two_chars((time%60000)/1000) + "." + QString::number(time%1000/100);
 }
 

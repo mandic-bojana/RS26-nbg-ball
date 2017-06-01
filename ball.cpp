@@ -85,11 +85,11 @@ void Ball::blink() {
         level->ball()->_eyes_timer->setInterval(250);
 }
 
-double d2(QPointF A, QPointF B) {
+double Ball::d2(QPointF A, QPointF B) {
     return (A.x() - B.x()) * (A.x() - B.x()) + (A.y() - B.y()) * (A.y() - B.y());
 }
 
-double d(QPointF A, QPointF B) {
+double Ball::d(QPointF A, QPointF B) {
     return sqrt(d2(A, B));
 }
 
@@ -202,6 +202,8 @@ void Ball::bounce(double alpha) {
         _angle -= 2 * M_PI;
     if(_angle < level->min_ball_angle)
         _angle = level->min_ball_angle;
+    if(_angle > 2*M_PI - level->min_ball_angle)
+        _angle = 2*M_PI - level->min_ball_angle;
 }
 
 void Ball::bounce_vertical() {
