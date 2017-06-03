@@ -12,6 +12,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = NBG_Ball
 TEMPLATE = app
 
+RC_FILE = catface.rc
 
 SOURCES += main.cpp \
     level.cpp \
